@@ -1,0 +1,17 @@
+{
+    "name": "macbookpro/gestion-caisse-smt",
+    "autoload": {
+        "psr-4": {
+            "Macbookpro\\GestionCaisseSmt\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mahf-TB",
+            "email": "mahefatsilavirintsoa@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.9"
+    }
+}
