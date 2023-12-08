@@ -1,8 +1,9 @@
 <template>
     <div class="mt-8 bg-white p-4 shadow rounded-lg">
         <div class="bg-white p-4 rounded-md mt-4">
-            <h2 class="text-gray-500 text-lg font-semibold pb-4">Liste des agents pour avancement grade.</h2>
-            <div class="flex justify-between max-md:flex-col">
+            <div class="flex justify-between items-center max-md:flex-col">
+
+                <h2 class="text-gray-500 text-lg  font-semibold pb-4">Liste des agents pour avancement grade.</h2>
                 <!-- Recherche input en top -->
                 <div class="relative max-w-md w-full mb-5">
                     <div class="absolute top-1 left-2 inline-flex items-center p-2">
@@ -12,7 +13,7 @@
                         class="w-full h-10 pl-10 pr-4 py-1 text-base placeholder-gray-500 border rounded-full focus:shadow-outline"
                         type="search" placeholder="Recherche..." />
                 </div>
-                
+
             </div>
             <div class="my-1"></div>
             <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-6"></div>
@@ -21,25 +22,55 @@
                     <tr class="text-sm leading-normal">
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Motif
+                            Matricule
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Date
+                            Noms
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Status
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Dernière Avancement
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            CORPS
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Grade
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            PROCHAINE AVANCEMENT
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            SECTION
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-                            Montant
+                            SOA libelle
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
+                            Ministere
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover:bg-grey-lighter" v-for="(data, index) in paginatedData" v-bind:key="index">
+                    <!-- <tr class="hover:bg-grey-lighter" v-for="(data, index) in paginatedData" v-bind:key="index">
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.montant }}</td>
                         <td class="py-2 px-4 border-b border-grey-light">{{ data.motif }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light">{{ data.date }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light text-right">
-                            {{ data.montant }} MGA
-                        </td>
+                        <td class="py-2 px-4 border-b border-grey-light "> MGA{{ data.montant }}</td>
+                    </tr> -->
+                    <tr class="hover:bg-grey-lighter text-center flex justify-around">
+                        <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+                            animationDuration=".5s" aria-label="Custom ProgressSpinner" />
                     </tr>
                 </tbody>
             </table>
@@ -81,15 +112,20 @@
     </div>
 </template>
 <script>
-    export default {
+import ProgressSpinner from 'primevue/progressspinner';
+
+export default {
     name: 'TableRecette',
     props: {
         dataList: Array,
     },
+    components: {
+        ProgressSpinner
+    },
     data() {
         return {
             currentPage: 1,
-            itemsPerPage: 5
+            itemsPerPage: 10
         }
     },
     computed: {

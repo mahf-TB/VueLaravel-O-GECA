@@ -1,8 +1,8 @@
 <template>
     <div class="mt-8 bg-white p-4 shadow rounded-lg">
         <div class="bg-white p-4 rounded-md mt-4">
-            <h2 class="text-gray-500 text-lg font-semibold pb-4">Liste des agents à renouveler leur contrat.</h2>
-            <div class="flex justify-between max-md:flex-col">
+            <div class="flex justify-between items-center max-md:flex-col">
+                <h2 class="text-gray-500 text-lg font-semibold pb-4">Liste des agents à renouveler leur contrat.</h2>
                 <!-- Recherche input en top -->
                 <div class="relative max-w-md w-full mb-5">
                     <div class="absolute top-1 left-2 inline-flex items-center p-2">
@@ -21,15 +21,43 @@
                     <tr class="text-sm leading-normal">
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Motif
+                            Matricule
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Date
+                            Noms
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Status
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            corps
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Grade
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Debut Contrat
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Fin Contrat
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Section 
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-                            Montant
+                            Soa Libelle
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
+                            Ministere
                         </th>
                     </tr>
                 </thead>
@@ -43,6 +71,7 @@
                     </tr>
                 </tbody>
             </table>
+
             <div class="text-left mt-4">
                 <ul class="flex items-center -mx-[6px]">
                     <li class="px-[6px]">

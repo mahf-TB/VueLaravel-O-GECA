@@ -7,7 +7,7 @@ import Login from '@/views/pages/Login.vue'
 import Reset from '@/views/pages/ResetPassword.vue'
 import Page404 from '@/views/pages/Page404.vue'
 
-import Home from '@/views/pages/Dashboard.vue'
+import Home from '@/views/pages/PageTable/Dashboard.vue'
 import Avancement from '@/views/pages/PageTable/Avancement.vue'
 import Contractuel from '@/views/pages/PageTable/Contractuel.vue'
 import Retraite from '@/views/pages/PageTable/Retraite.vue'
