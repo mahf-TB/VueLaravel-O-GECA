@@ -3,31 +3,31 @@
         <!-- Reset Container -->
         <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg z-10">
             <div class="grid  gap-8 grid-cols-1">
-                <div class="flex flex-col ">
-                    <div class="md:space-y-2 mb-3 hidden">
-                        <label class="text-xs font-semibold text-gray-600 py-2">
+                <div class="flex flex-col">
+                    <div class="text-center flex justify-center">
+                        <label class="text-xs font-semibold text-gray-600 py-2 ">
                             <img class="w-60" :src="require('@/assets/Ministère.png')" alt="" /><abbr class="hidden"
-                                title="required">*</abbr></label>
-
+                                title="required">*</abbr>
+                            </label>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center mt-5 mb-5">
-                        <h2 class="font-semibold text-lg mr-auto">Réinitialliser votre mot de passe</h2>
+                    <div class="flex flex-col sm:flex-row justify-center items-center mt-5 mb-5">
+                        <h2 class="font-semibold text-[#e3ac41] mr-auto">Réinitialliser votre mot de passe</h2>
                         <div class="w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0"></div>
                     </div>
                     <div class="mt-5">
                         <div class="form">
 
                             <div class="md:flex flex-row md:space-x-4 w-full text-xs">
-                                <div class="mb-3 space-y-2 w-full text-xs">
-                                    <label class="font-semibold text-gray-600 py-2">Matricule <abbr
+                                <div class="mb-3 space-y-2 w-full text-[18px]">
+                                    <label class="font-semibold text-gray-600 py-2">Entrer Votre Adresse Email <abbr
                                             title="required">*</abbr></label>
-                                    <input placeholder="Matricule" v-model="user.matricule"
-                                        class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
-                                        required="required" type="text" name="integration[shop_name]"
+                                    <input placeholder="Exemple@exempe.com" v-model="user.matricule"
+                                        class="text-[14px] appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded-lg h-10 px-4"
+                                        required="required" type="email" name="integration[shop_name]"
                                         id="integration_shop_name">
                                     <p class="text-red text-xs hidden">Please fill out this field.</p>
                                 </div>
-                                <div class="mb-3 space-y-2 w-full text-xs">
+                                <!-- <div class="mb-3 space-y-2 w-full text-xs">
                                     <label class="font-semibold text-gray-600 py-2">Téléphone <abbr
                                             title="required">*</abbr></label>
                                     <input placeholder="Téléphone"  v-model="user.tel"
@@ -35,10 +35,10 @@
                                         required="required" type="text" name="integration[shop_name]"
                                         id="integration_shop_name">
                                     <p class="text-red text-xs hidden">Please fill out this field.</p>
-                                </div>
+                                </div> -->
                             </div>
 
-                            <div class="md:flex md:flex-row md:space-x-4 w-full text-xs">
+                            <!-- <div class="md:flex md:flex-row md:space-x-4 w-full text-xs">
                                 <div class="mb-3 space-y-2 w-full text-xs">
                                     <label class="font-semibold text-gray-600 py-2">Nouveaux mot de passe<abbr
                                             title="required">*</abbr></label>
@@ -57,14 +57,14 @@
                                         id="integration_shop_name">
                                     <p class="text-red text-xs hidden">Please fill out this field.</p>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="mt-5 text-right md:space-x-3 md:block flex flex-col-reverse">
                                 <button @click="retourne()"
                                     class="mb-2 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-medium tracking-wider border text-gray-600 rounded-full hover:shadow-lg hover:bg-gray-100">
                                     Annuler </button>
                                 <button @click="onReset()"
-                                    class="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-500">Confirmer</button>
+                                    class="mb-2 md:mb-0 bg-green-600 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-sec">Confirmer</button>
                             </div>
                         </div>
                     </div>

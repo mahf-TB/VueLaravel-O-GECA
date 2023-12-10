@@ -61,8 +61,6 @@
                         placeholder="Select Cities" :filter="true"
                         class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" />
                 </div>
-
-
                 <div class="flex items-center justify-start w-full">
                     <button
                         class="focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-gray-400  bg-gray-100 transition duration-150 text-gray-600 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"

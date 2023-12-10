@@ -16,7 +16,7 @@
             </div>
             <div class="my-1"></div>
             <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-6"></div>
-            <table class="w-full table-auto text-sm">
+            <table class="w-full container table-auto text-sm">
                 <thead>
                     <tr class="text-sm leading-normal">
                         <th
