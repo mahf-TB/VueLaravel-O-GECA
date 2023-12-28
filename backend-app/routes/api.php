@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthContronller;
-use App\Http\Controllers\SectionController;
+use App\Http\Controllers\AgentController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,17 +23,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 //authentification
 Route::group(['middleware' => 'api','prefix' => 'auth'],function ($router) {
-    Route::post('/login', [AuthContronller::class,'login']);
-    Route::post('/addUser',  [AuthContronller::class,'addUser']);
-    Route::get('/user',  [AuthContronller::class,'getUser']);
+    Route::post('/login', [AuthController::class,'login']);
+    Route::post('/addUser',  [AuthController::class,'addUser']);
+    Route::get('/user',  [AuthController::class,'getUser']);
 
 });
 
 //user
-Route::get('/getUser',[AuthContronller::class,'getAllUser'] );
-Route::get('/delete/{id}',[AuthContronller::class,'deleteUser'] );
-Route::get('/find/{id}',[AuthContronller::class,'findUpdateUser'] );
-Route::get('/update/{id}',[AuthContronller::class,'updateUser'] );
+Route::get('/getUser',[UserController::class,'getAllUser'] );
+Route::delete('/delete/{id}',[UserController::class,'deleteUser'] );
+Route::get('/find/{id}',[UserController::class,'findUser'] );
+Route::post('/update/{id}',[UserController::class,'updateUser'] );
 
-//section
-Route::get('/section',[SectionController::class,'section'] );
+//ajouter des uadm sur user
+Route::post('/insertUADM/{id}',[UserController::class,'addUserUadm'] );
+Route::get('/uadm',[UserController::class,'getUadm'] );
+
+//importation des données 
+Route::post('/import',[ExcelController::class,'importExcel'] );
+
+//route pour recuperer les données agents
+Route::get('/allAgents',[AgentController::class,'getAgentsAvance'] );
+Route::get('/allAgentsContrat',[AgentController::class,'getAgentsContrat'] );
+Route::get('/allAgentsRetraite',[AgentController::class,'getAgentsRetraite'] );

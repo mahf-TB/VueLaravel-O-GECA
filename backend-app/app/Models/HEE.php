@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Grade extends Model
+class HEE extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'grade_code' ,
-        'grade_libelle',
-        'grade_duree_requise',
+        'hee_code' ,
+        'hee_libelle',
+        'categorie',
+        'indice',
     ];
+
+    protected $table = 'hees';
     public $timestamps = false;
 }

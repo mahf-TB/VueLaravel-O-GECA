@@ -20,12 +20,17 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'matricule',
+        'username',
         'nom',
         'prenom',
         'email',
         'password',
         'role',
     ];
+    public function uadms()
+    {
+        return $this->hasMany(user_uadm::class, 'user_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

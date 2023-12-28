@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
-class AuthContronller extends Controller
+class AuthController extends Controller
 {
     public function __construct()
     {
@@ -55,29 +53,16 @@ class AuthContronller extends Controller
         return response()->json(auth()->user());
     }
 
-    public function getAllUser()
-    {
-        $user = User::all();
-        if(!$user){
-            return response()->json([
-                'messageError' => 'Aucun donnees recuperer',
-            ], 401);
-        }
-        return response()->json([
-            'dataUser' => $user,
-            'message' => 'les donnees sont recupeerer',
-            'code' => 200
-        ]);
-    }
+
     public function addUser(Request $request)
     {
         $request->validate([
             'matricule' => 'required|string|max:255',
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'role' => 'required|string|max:25',
+            'role' => 'required|string',
         ]);
         $user = User::create([
             "matricule" => $request->matricule,
@@ -91,27 +76,10 @@ class AuthContronller extends Controller
         return  response()->json([
             'message' => 'Utilisateur creer avec success',
             'user' => $user,
-        ], 201);
+            'status'=> 201
+        ]);
     }
-    public function deleteUser($id){
-        $user =User::find($id);
-        if($user->delete()){
-            return response()->json([
-                'message'=>'Suppresion user success',
-                'status'=>200
-            ]);
-        }
-    }
-    public function findUpdateUser($id){
-        $user =User::find($id);
-        if($user->delete()){
-            return response()->json([
-                'message'=>'successeful...',
-                'user'=>$user,
-                'status'=>200
-            ]);
-        }
-    }
-    
+   
+
    
 }
