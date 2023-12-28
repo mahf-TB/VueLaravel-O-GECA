@@ -65,7 +65,6 @@
 
 
 <script>
-import { jwtDecode } from 'jwt-decode';
 import Axios from "@/_service/caller.service";
 import ModalProfile from '@/components/ModalProfile.vue';
 export default {

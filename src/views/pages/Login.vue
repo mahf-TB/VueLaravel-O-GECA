@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center h-screen" style="background: #edf2f7;">
+  <div class="flex items-center justify-center h-screen bg-gradient-to-r from-green-pri to-green-font">
     <!-- Login Container -->
     <div class="min-w-fit flex-col border bg-white px-6 py-14 shadow-md rounded-xl">
       <div class="mb-8 flex justify-center">
@@ -73,7 +73,7 @@ export default {
             localStorage.setItem("token", JSON.stringify(token))
             this.$router.push("/");
           } else {
-            this.errorID = 'Verifiez votre matricule ou email'
+            this.errorID = 'Verifiez votre matricule ou adresse email'
             this.errorPWD = 'Verifiez votre mot de passe'
             this.errorClass='border-red-500'
           }
@@ -82,7 +82,7 @@ export default {
           console.log("error dans l'axios: ", error)
         })
       } else {
-        this.errorID = 'Entrer votre matricule ou email'
+        this.errorID = 'Entrer votre matricule ou adresse email'
         this.errorPWD = 'Entrer votre mot de passe'
         this.errorClass='border-red-500'
       }

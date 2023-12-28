@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-10 mb-10 md:ml-64">
+  <div class="mt-10 mb-10 md:ml-56">
     <!-- main content page -->
     <div class="mt-2 bg-white p-4 shadow rounded-lg">
       <h2 class="text-gray-500 text-lg font-semibold pb-0">Rechrerche entre deux date</h2>
@@ -11,12 +11,9 @@
             <th
               class="pt-4 px-4 bg-grey-lightest flex items-center  font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
               <div class="flex justify-between items-center  text-xs">
-                <button class="text-green-pri flex items-center">
-                  <i class="fa-solid fa-sliders"></i>
-                  <div class="ml-2">FILTRES</div>
-                </button>
-                <button class="text-gray-600 flex items-center ml-4 w-full">retraiter des agents dans 6 mois et entre les
-                  date aujourd'hui</button>
+                  <Menubar :model="items" class="text-green-pri  h-[40px] text-sm" />
+                <!-- <button class="text-gray-600 flex items-center ml-4 w-full">avancement des agents dans 6 mois et entre les
+                  date aujourd'hui</button> -->
               </div>
             </th>
             <th
@@ -40,24 +37,78 @@
         </thead>
       </table>
     </div>
-    <TableRetraite />
+    <TableRetraite v-if="!isLoad" :dataList="dataList"/>
+
+    <SkeletRetraiteVue v-if="isLoad" />
   </div>
 </template>
 
 <script>
-import { jwtDecode } from 'jwt-decode';
+
 import Axios from "@/_service/caller.service";
 import TableRetraite from '@/views/DataTable/TableRetraite.vue'
+import SkeletRetraiteVue from '@/components/Skeleton/SkeletRetraite.vue';
 import Calendar from 'primevue/calendar';
+import Menubar from "primevue/menubar";
+
 export default {
   name: 'Contractuel',
   components: {
-    TableRetraite, Calendar
-  },
+    TableRetraite, Calendar, SkeletRetraiteVue,
+    Menubar
+},
   data() {
     return {
-      dates: null
+      dataList: null,
+      dates: null,
+      isLoad:true,
+      items: [
+                {
+                    label: 'FILTRES',
+                    icon: 'fa-solid fa-sliders',
+                    items: [
+                        {
+                            label: ' Agents retraite bientot',
+                            icon: 'pi pi-bolt',
+                            command: () => {
+                              this.getAllRetraite()
+                            }
+                        },
+                        {
+                            label: 'agents retraite entard ',
+                            icon: 'pi pi-bolt',
+                            command: () => {
+                              this.getAllRetraite()
+                            }
+                        },
+                    ]
+                }
+            ]
+
     }
-  }
+  },
+  mounted() {   
+
+    this.getAllRetraite()
+  },
+  methods: {
+    async getAllRetraite() {
+      this.isLoad = true
+      try {
+        const response = await Axios.get('/allAgentsRetraite')
+        this.dataList = response.data.DataAgents;
+      } catch (error) {
+        console.log("error dans l'axios: ", error)
+      } finally {
+        this.isLoad = false
+      }
+      
+
+    },
+    searchDate() {
+      console.log(this.dates)
+    }
+  },
+
 }
 </script>

@@ -21,7 +21,7 @@
         <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-6"></div>
         <table class="w-full container table-auto text-sm">
             <thead>
-                <tr class="text-sm leading-normal">
+                <tr class="text-sm leading-normal bg-green-font text-white">
                     <th
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
                         Matricule
@@ -47,7 +47,7 @@
                         Date création
                     </th>
                     <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-center">
                         Actions
                     </th>
                 </tr>
@@ -63,15 +63,15 @@
 
                     <td class="py-2 px-4 border-b border-grey-light">{{ data.role }}</td>
                     <td class="py-2 px-4 border-b border-grey-light">{{ data.created_at }}</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">
+                    <td class="py-2 px-4 border-b border-grey-light text-center">
                         <div class="inline-flex items-center space-x-3">
-                            <ModalUpdateVue />
+                            <SideBarUpdate :id="data.id" />
                             <a @click.prevent="deleteUser(data.id)" title="Edit password"
                                 class="text-[#ff3e3e] hover:text-[#ff3e3e]">
                                 <i class="fa-solid fa-trash-can"></i>
                             </a>
-                            <a @click.prevent="open()" title="Suspend user" class="text-green-sec hover:text-green-pri">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            <a @click.prevent="open(data.id)" title="Suspend user" class="text-[#e1b14f] hover:text-[#ebc371]">
+                                <i class="fa-solid fa-file"></i>
                             </a>
                         </div>
                     </td>
@@ -117,14 +117,15 @@
 
 <script>
 
+import Swal from 'sweetalert2';
 import Axios from "@/_service/caller.service";
-import ModalAjouterUserVue from '@/components/ModalAjouterUser.vue';
+import SideBarUpdate from '../pages/Utilisateur/SideBarUpdate.vue';
 import Toast from 'primevue/toast';
-import ModalUpdateVue from '@/components/ModalUpdate.vue';
+import ModalAjouterUserVue from '../pages/Utilisateur/ModalAjouterUser.vue';
 export default {
     name: 'TableRecette',
     components: {
-        Toast, ModalAjouterUserVue, ModalUpdateVue
+        Toast, SideBarUpdate, ModalAjouterUserVue
     },
     data() {
         return {
@@ -142,7 +143,6 @@ export default {
             if (this.query != '') {
                 const query = this.query.toLowerCase();
                 return this.dataList.filter(item => {
-                    // Filtrer en fonction de la recherche
                     return item.nom.toLowerCase().includes(query)
                         || item.prenom.toLowerCase().includes(query)
                         || item.matricule.toLowerCase().includes(query)
@@ -172,17 +172,31 @@ export default {
         EditUser(item) {
             console.log(item)
         },
-        deleteUser(item) {
-            Axios.get(`/delete/${item}`).then((response) => {
-                if (response.data.status == 200) {
-                    console.log(response.data.message)
-                }
-            }).catch((error) => {
-                console.log("error dans l'axios: ", error)
-            })
-        },
-        open() {
+        async deleteUser(item) {
+            const result = await Swal.fire({
+                title: 'Êtes-vous sûr de vouloir supprimer?',
+                text: "Cette action est irréversible!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, supprimer!'
+            });
+            if (result.isConfirmed) {
+                Axios.delete(`/delete/${item}`).then((response) => {
+                    if (response.data.status == 200) {
+                        console.log(response.data.message)
+                        this.getAllUser()
+                    }
+                }).catch((error) => {
+                    console.log("error dans l'axios: ", error)
+                })
+            }
 
+
+        },
+        open(item) {
+            console.log(item)
         },
         nextPage() {
             if (this.currentPage * this.itemsPerPage < this.dataList.length) {

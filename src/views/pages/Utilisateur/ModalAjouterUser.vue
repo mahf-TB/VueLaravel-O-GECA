@@ -57,8 +57,8 @@
                 <label for="expiry" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Section
                 </label>
                 <div class="relative mb-5 mt-2">
-                    <MultiSelect v-model="Sections" :options="sectionValues" optionLabel="soa_libelle"
-                        placeholder="Select Cities" :filter="true"
+                    <MultiSelect v-model="Sections" :options="sectionValues" display="chip" filter optionLabel="uadm_libelle"
+                        placeholder="Select Cities"  panelClass="custom-multiselect-panel" 
                         class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" />
                 </div>
                 <div class="flex items-center justify-start w-full">
@@ -66,7 +66,7 @@
                         class="focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-gray-400  bg-gray-100 transition duration-150 text-gray-600 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
                         @click="visible = false">Cancel</button>
                     <button
-                        class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 ml-3 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm"
+                        class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 ml-3 transition duration-150 ease-in-out hover:bg-green-600 bg-green-700 rounded text-white px-8 py-2 text-sm"
                         @click.prevent="SaveUser()"> Enregistrer</button>
 
                 </div>
@@ -75,7 +75,7 @@
         </Dialog>
         <button @click="visible = true"
             class="bg-green-pri hover:bg-green-sec text-white font-semibold py-2 px-4 mb-5 rounded">
-            <i class="fa-solid fa-user-plus"></i> Nouvelle RH
+            <i class="fa-solid fa-user-plus"></i> Nouveaux RH
         </button>
     </div>
 </template>
@@ -112,7 +112,7 @@ export default {
     },
     methods: {
         getSection() {
-            Axios.get('/section').then((response) => {
+            Axios.get('/uadm').then((response) => {
                 if (response.status == 200) {
                     this.sectionValues = response.data.dataSection
                 }
@@ -136,10 +136,12 @@ export default {
         const toast = useToast();
         const SaveUser = () => {
             if (!user.matricule || !user.nom || !user.prenom || !user.email || !user.motdepasse || !user.role) {
-              return []
-
+                Sections.value.forEach(element => {
+                    SecArray.push(element.uadm_code)
+                });
+                console.log(SecArray)
             } else {
-                console.log(user)
+                //valeur de la user dans input
                 var donnee = new FormData();
                 donnee.append('matricule', user.matricule);
                 donnee.append('nom', user.nom);
@@ -148,18 +150,60 @@ export default {
                 donnee.append('password', user.motdepasse);
                 donnee.append('role', user.role);
 
+                //route axios ajouter user
                 Axios.post('/auth/addUser', donnee).then((response) => {
-                    toast.add({ severity: 'success', summary: 'Successful', detail: `${response.data.message}`, life: 3000 });
-                    visible.value = false;
-                    props.getAllUser();
+                    if (response.data.status == 201) {
+                        console.log(response.data.user.id)
+
+                        //route axios ajouter user et UADM
+                        //ajouter valeur uadm dans tableau
+                        if (Sections.value) {
+                            Sections.value.forEach(element => {
+                                SecArray.push(element.uadm_code)
+                            })
+
+                            Axios.post(`/insertUADM/${response.data.user.id}`, { SecArray }).then((response) => {
+                                toast.add({ severity: 'success', summary: 'Successful', detail: `${response.data.message}`, life: 3000 });
+                                visible.value = false;
+                                props.getAllUser();
+                                initUser()
+
+                            }).catch((error) => {
+                                console.log("error dans l'axios: ", error)
+                            })
+                        } else {
+                            toast.add({ severity: 'success', summary: 'Successful', detail: `${response.data.message}`, life: 3000 });
+                            visible.value = false;
+                            props.getAllUser();
+                            initUser()
+                        }
+
+                    }
+
                 }).catch((error) => {
                     console.log("error dans l'axios: ", error)
                 })
             }
         }
+        const initUser = () =>{
+            user.matricule = '',
+                user.nom = '',
+                user.prenom = '',
+                user.email = '',
+                user.motdepasse = '',
+                user.role = 'RH'     
+        }
+            
+       
         return {
             SaveUser, user, visible, Sections
         }
     }
 }
 </script>
+<style>
+.custom-multiselect-panel {
+    max-width: 500px;
+    border: 1px solid rgb(3, 111, 3);
+}
+</style>

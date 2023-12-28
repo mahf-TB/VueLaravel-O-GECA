@@ -1,10 +1,10 @@
 <template>
-  <div class="fixed w-full flex items-center justify-between h-[60px] bg-green-pri text-green-pri shadow z-10">
+  <div class="fixed w-full flex items-center justify-between h-[60px] bg-green-pri text-green-pri shadow px-5 z-10">
     <div class="container flex items-center pl-1">
       <div class="flex items-center"> <!-- Mostrado en todos los dispositivos -->
         <img :src="require('@/assets/Ministère.png')" alt="Logo" class="w-28 h-18 mr-2"
-          style="width: 80px; height: 60px;">
-        <h2 class="font-bold text-x text-gray-100 ">ZIFUKORO APP</h2>
+          style="width: 70px; height: 50px;">
+        <h2 class="font-bold text-x text-gray-100 ">O-GECA APP</h2>
         <h2 class="font-bold text-x">Nombre de la</h2>
       </div>
       <div class="md:hidden flex items-center"> <!-- Se muestra solo en dispositivos pequeños -->
@@ -44,8 +44,6 @@
 </template>
 
 <script>
-
-import { jwtDecode } from 'jwt-decode';
 import Axios from "@/_service/caller.service";
 export default {
   name: 'HeaderBar',

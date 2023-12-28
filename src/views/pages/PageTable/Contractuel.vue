@@ -1,6 +1,6 @@
 <template>
   
-  <div class="mt-10 mb-10 md:ml-64">
+  <div class="mt-10 mb-10 md:ml-56">
     <!-- main content page -->
     <div class="mt-2 bg-white p-4 shadow rounded-lg">
       <h2 class="text-gray-500 text-lg font-semibold pb-0">Rechrerche entre deux date</h2>
@@ -12,12 +12,9 @@
             <th
               class="pt-4 px-4 flex items-center bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
               <div class="flex justify-between items-center  text-xs">
-                <button class="text-green-pri flex items-center">
-                  <i class="fa-solid fa-sliders"></i>
-                  <div class="ml-2">FILTRES</div>
-                </button>
-                <button class="text-gray-600 flex items-center ml-4 w-full">contractuel des agents dans 6 mois et entre
-                  les date aujourd'hui</button>
+                  <Menubar :model="items" class="text-green-pri   h-[40px] text-sm" />
+                <!-- <button class="text-gray-600 flex items-center ml-4 w-full">avancement des agents dans 6 mois et entre les
+                  date aujourd'hui</button> -->
               </div>
             </th>
             <th
@@ -56,26 +53,75 @@
         </thead>
       </table>
     </div>
-    <TableContractuel />
+    <TableContractuel v-if="!isLoad" :dataList="dataList" />
+    <SkeletContratVue v-if="isLoad" />
   </div>
 </template>
 
 <script>
-import { jwtDecode } from 'jwt-decode';
+
 import Axios from "@/_service/caller.service";
 import TableContractuel from '@/views/DataTable/TableContractuel.vue'
 import Calendar from 'primevue/calendar';
+import SkeletContratVue from '@/components/Skeleton/SkeletContrat.vue';
+import Menubar from "primevue/menubar";
+
 export default {
   name: 'Contractuel',
   components: {
-    TableContractuel, Calendar
-  }, data() {
+    TableContractuel, Calendar, SkeletContratVue,
+    Menubar
+}, data() {
     return {
-      dates: null
+      dataList: null,
+      dates: null,
+      isLoad:true,
+      items: [
+                {
+                    label: 'FILTRES',
+                    icon: 'fa-solid fa-sliders',
+                    items: [
+                        {
+                            label: 'contrat bientot éxpire',
+                            icon: 'pi pi-bolt',
+                            command: () => {
+                              this.getAllContrat()
+                            }
+                        },
+                        {
+                            label: 'contrat en retard',
+                            icon: 'pi pi-bolt',
+                            command: () => {
+                              this.getAllContrat()
+                            }
+                        },
+                    ]
+                }
+            ]
+
     }
   },
-  mounted() {
+  mounted() {   
 
+    this.getAllContrat()
+  },
+  methods: {
+    async getAllContrat() {
+      this.isLoad = true
+      try {
+        const response = await Axios.get('/allAgentsContrat')
+        this.dataList = response.data.DataAgents;
+      } catch (error) {
+        console.log("error dans l'axios: ", error)
+      } finally {
+        this.isLoad = false
+      }
+      
+
+    },
+    searchDate() {
+      console.log(this.dates)
+    }
   },
 
 

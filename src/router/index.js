@@ -12,6 +12,7 @@ import Avancement from '@/views/pages/PageTable/Avancement.vue'
 import Contractuel from '@/views/pages/PageTable/Contractuel.vue'
 import Retraite from '@/views/pages/PageTable/Retraite.vue'
 import Profile from '@/views/pages/Profile.vue'
+import Import from '@/views/pages/ImportFile.vue'
 import UserListe from '@/views/pages/Utilisateur/UserListe.vue'
 
 
@@ -27,6 +28,7 @@ const routes = [
       { path:'/contractuel', name:'Contractuel', component:Contractuel },
       { path:'/retraite', name:'Retraite', component:Retraite },
       { path:'/profile', name:'Profile', component:Profile },
+      { path:'/import', name:'ImportFile', component:Import },
       {
         beforeEnter:authGuard.User,
         path: '/user',

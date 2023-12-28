@@ -1,5 +1,4 @@
 import router from "@/router/index";
-import { jwtDecode } from 'jwt-decode';
 import Axios from "@/_service/caller.service";
 
 let Connect = (to) => {
