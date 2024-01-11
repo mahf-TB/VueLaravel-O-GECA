@@ -23,6 +23,7 @@ class Agent extends Model
         'code_section',
         'code_fiv',
         'code_sanction',
+        'code_uadm',
         'debut_contrat',
         'avance_date',
         'code_ministere',
@@ -55,6 +56,11 @@ class Agent extends Model
     {
         return $this->belongsTo(Districte::class, 'code_fiv', 'districte_code');
     }
+     //UADM
+     public function uadms()
+     {
+         return $this->belongsTo(Uadm::class, 'code_uadm', 'uadm_code');
+     }
 
     //SANCTION
     public function sanction()

@@ -50,20 +50,28 @@ class UserController extends Controller
 
     public function updateUser($id, Request $request)
     {
-        $user = User::where('id', $id)->first();
-        $request->validate([
-            'matricule' => 'required|string|max:255',
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'string|email|max:255|unique:users',
-            'role' => 'required|string',
+        
+        $user = User::find($id);
+        $users= $user->update([
+            "matricule" => $request->matricule,
+            "username" => $request->username,
+            "nom" => $request->nom,
+            "prenom" => $request->prenom,
+            "email" => $request->email,
+            "role" => $request->role,
         ]);
-
-        if ($user) {
+        // $users = $user->save();
+        if ($users) {
             return response()->json([
                 'message' => 'successeful...',
-                'user' => $user,
+                'user' => $users,
                 'status' => 200
+            ]);
+        }else{
+            return  response()->json([
+                'message' => 'Update d\'user echec ...',
+                'user' => $user,
+                'status' => 201
             ]);
         }
     }
@@ -91,6 +99,19 @@ class UserController extends Controller
             'message' => 'UADM inseret avec success',
             'uadm' => $value,
             'status' => 201
+        ]);
+    }
+
+    public function getUadmUser($id)
+    {
+        $uadm = user_uadm::where('user_id', $id)->get();
+        $tabuadm = $uadm->pluck('code_uadm')->toArray();
+        $uadms = Uadm::whereIn('uadm_code', $tabuadm)->get();
+        return response()->json([
+            "user_id"=> $id,
+            "UadmDeUser" => $uadms,
+            "message" => 'Tout les donnees sont recuperer',
+            "code" => 200
         ]);
     }
 }

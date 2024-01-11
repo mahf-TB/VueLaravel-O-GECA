@@ -35,14 +35,14 @@ class CreateAgentsTable extends Migration
             $table->string('code_ministere',50)->nullable();// foreignID
 
             // foreignID dans table agents
-            $table->foreign('code_corps')->references('corps_code')->on('corps');
-            $table->foreign('code_grade')->references('grade_code')->on('grades');
-            $table->foreign('code_hee')->references('hee_code')->on('hees');
-            $table->foreign('code_section')->references('section_code')->on('sections');
-            $table->foreign('code_fiv')->references('districte_code')->on('districtes');
-            $table->foreign('code_sanction')->references('sanction_code')->on('sanctions');
-            $table->foreign('code_uadm')->references('uadm_code')->on('uadms');
-            $table->foreign('code_ministere')->references('ministere_code')->on('ministeres');
+            $table->foreign('code_corps')->references('corps_code')->on('corps')->onUpdate('cascade');
+            $table->foreign('code_grade')->references('grade_code')->on('grades')->onUpdate('cascade');
+            $table->foreign('code_hee')->references('hee_code')->on('hees')->onUpdate('cascade');
+            $table->foreign('code_section')->references('section_code')->on('sections')->onUpdate('cascade');
+            $table->foreign('code_fiv')->references('districte_code')->on('districtes')->onUpdate('cascade');
+            $table->foreign('code_sanction')->references('sanction_code')->on('sanctions')->onUpdate('cascade');
+            $table->foreign('code_uadm')->references('uadm_code')->on('uadms')->onUpdate('cascade');
+            $table->foreign('code_ministere')->references('ministere_code')->on('ministeres')->onUpdate('cascade');
 
             $table->timestamps();
         });

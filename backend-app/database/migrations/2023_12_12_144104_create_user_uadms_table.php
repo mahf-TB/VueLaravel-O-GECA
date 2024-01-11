@@ -17,8 +17,8 @@ class CreateUserUadmsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('code_uadm',50);
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('code_uadm')->references('uadm_code')->on('uadms');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('code_uadm')->references('uadm_code')->on('uadms')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
