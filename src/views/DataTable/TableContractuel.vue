@@ -2,7 +2,13 @@
     <div class="mt-8 bg-white p-4 shadow rounded-lg">
         <div class="bg-white p-4 rounded-md mt-4">
             <div class="flex justify-between items-center max-md:flex-col">
-                <h2 class="text-gray-500 text-lg font-semibold pb-4">Liste des agents à renouveler leur contrat.</h2>
+                <h2 class="text-gray-500 text-lg font-semibold pb-4">
+                    <button @click="visible = true"
+                        class="bg-green-pri hover:bg-green-sec text-white font-semibold py-2 px-4  rounded">
+                        <i class="fa-solid fa-user-plus"></i> Exporter
+                    </button>
+                </h2>
+                    <!-- Liste des agents à renouveler leur contrat. -->
                 <!-- Recherche input en top -->
                 <div class="relative max-w-md w-full mb-5">
                     <div class="absolute top-1 left-2 inline-flex items-center p-2">
@@ -53,11 +59,11 @@
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Ministere
+                            uadm
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-                            Actions
+                            Details
                         </th>
                     </tr>
                 </thead>
@@ -68,14 +74,12 @@
                         <td class="py-2 px-4 border-b border-grey-light "> {{ data.status }}</td>
                         <td class="py-2 px-4 border-b border-grey-light "> {{ data.corps }}</td>
                         <td class="py-2 px-4 border-b border-grey-light "> {{ data.grade }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light "> {{isDateVide(data, data.debut_contrat) }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light ">{{isDateVide(data, data.fin_contrat) }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light "> {{data.debut_contrat }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light ">{{data.fin_contrat}}</td>
                         <td class="py-2 px-4 border-b border-grey-light "> {{ data.section }}</td>
                         <td class="py-2 px-4 border-b border-grey-light"> {{ data.ministere }}</td>
                         <td class="py-2 px-4 border-b border-grey-light text-center"> 
-                            <a @click.prevent="open()" title="Suspend user" class="text-[#e1b14f] hover:text-[#ebc371]">
-                                <i class="fa-solid fa-file" style="font-size: 1.3rem"></i>
-                            </a>
+                            <ModalDetailler />
                         </td>
                     </tr>
                 </tbody>
@@ -92,13 +96,14 @@
 </template>
 <script>
 import Paginator from 'primevue/paginator';
+import ModalDetailler from '@/components/ModalDetailler.vue';
 
     export default {
     name: 'TableRecette',
     props: {
         dataList: Array,
     },
-    components: { Paginator },
+    components: { Paginator , ModalDetailler},
     data() {
         return {
             currentPage: 1,
@@ -108,33 +113,30 @@ import Paginator from 'primevue/paginator';
         };
     },
     computed: {
-        paginatedData() {
+     paginatedData() {
             if (this.query != '') {
-                // Filtrer en fonction de la recherche
                 const query = this.query.toLowerCase();
                 return this.dataList.filter(item => {
                     return item.agent_matricule.toLowerCase().includes(query)
                         || item.noms.toLowerCase().includes(query)
-                        || item.debut_contrat.toLowerCase().includes(query)
                         || item.fin_contrat.toLowerCase().includes(query)
-                        || item.section.toLowerCase().includes(query);
                 });
             }
             if (!this.dataList) {
                 return [];
             }
             const endIndex = this.first + this.itemsPerPage;
-            return this.dataList.slice(this.first, endIndex);
+            return  this.dataList.slice(this.first, endIndex);
         },
         isDateVide() {
             return function (data, donnee) {
-                return data.dernier_avance == '1900-01-01' ? '' : donnee;
+                return data.dernier_avance == null ? '' : donnee;
             };
         },
     },
     methods: {
         handlePagination(event){
-            console.log(event)
+            
             this.first = event.first
         }
     },

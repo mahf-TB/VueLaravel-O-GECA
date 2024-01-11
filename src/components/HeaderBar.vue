@@ -65,6 +65,8 @@ export default {
           }
         }).catch(error => {
           console.log("error dans l'axios: ", error)
+          // localStorage.clear();
+          // this.$router.push({ name: "Login" });
         })
       }
     } catch (error) {

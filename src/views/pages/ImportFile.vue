@@ -59,10 +59,11 @@
               class="flex justify-between items-center rounded-sm px-3 py-1 bg-green-pri hover:bg-green-500 text-white focus:shadow-outline focus:outline-none">
               <i v-if="isLoad" class="pi pi-spin pi-spinner mr-2" style="font-size: 1rem"></i>Importer Maintenant
             </button>
-            <button
+            <button @click.prevent="reinitAgents()"
               class="ml-3 rounded-sm px-3 py-1 bg-red-600 hover:bg-red-500 text-white focus:shadow-outline focus:outline-none">
               Reinitialliser
             </button>
+            <Toast />
           </footer>
         </article>
       </main>
@@ -190,14 +191,17 @@ document.getElementById("cancel").onclick = () => {
 </template>
   
 <script>
-import * as XLSX from 'xlsx';
 import ProgressBar from 'primevue/progressbar';
-
+import { useToast } from 'primevue/usetoast';
 import Axios from "@/_service/caller.service";
+import Toast from 'primevue/toast';
+import Swal from 'sweetalert2';
+
 export default {
   name: 'ImportFile',
   components: {
-    ProgressBar
+    ProgressBar,
+    Toast
   },
   data() {
     return {
@@ -242,24 +246,60 @@ export default {
       this.isLoad = true
       Axios.post('/import', formData).then((response) => {
         console.log(response.data);
-        if (response.data.status == 500) {
+        if (response.data.status == 201) {
           this.isLoad = false
-          alert('Error de l\'insertion')
-        } else if (response.data.status == 201) {
-          this.isLoad = false
+          Swal.fire({
+            title: 'Successfuly...!',
+            text: "importation des données success!",
+            icon: 'success',
+            timer: 1000
+          });
           this.deleteFile()
-          alert('success de l\'insertion')
-        }else{
+        } else if (response.data.status == 500) {
           this.isLoad = false
-          this.deleteFile()
-          alert('Error big to file de l\'insertion')
+          Swal.fire({
+            title: 'Error...!',
+            title: `Echec lors de l'importation`,
+            icon: 'error',
+            timer: 1000
+          })
         }
       }).catch((error) => {
         console.log("error dans l'axios: ", error)
-        alert('Error :', error)
       })
 
     },
+
+  },
+  // reinit
+  setup() {
+    const toast = useToast();
+
+    const reinitAgents = async () => {
+      const result = await Swal.fire({
+        title: 'Êtes-vous sûr de vouloir supprimer tout agents?',
+        text: "Cette action est irréversible!",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText:'Annuler',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, vider-le!'
+      });
+      if (result.isConfirmed) {
+        Axios.get('/auth/reinit').then((response) => {
+          if (response.data.status == 201) {
+            console.log(response.data.message)
+            toast.add({ severity: 'success', summary: 'Successful', detail: `${response.data.message}`, life: 3000 });
+          }
+        }).catch((error) => {
+          console.log("error dans l'axios: ", error)
+        })
+      }
+    }
+    return {
+      reinitAgents
+    }
   }
 }
 </script>

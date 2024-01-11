@@ -11,9 +11,8 @@
             <th
               class="pt-4 px-4 bg-grey-lightest flex items-center  font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
               <div class="flex justify-between items-center  text-xs">
-                  <Menubar :model="items" class="text-green-pri  h-[40px] text-sm" />
-                <!-- <button class="text-gray-600 flex items-center ml-4 w-full">avancement des agents dans 6 mois et entre les
-                  date aujourd'hui</button> -->
+                <Menubar :model="items" class="text-green-pri  h-[40px] text-sm" />
+                <button class="text-gray-600 text-sm flex items-center ml-4 w-full">{{ titre }}</button>
               </div>
             </th>
             <th
@@ -21,13 +20,13 @@
 
               <div class=" w-full space-y-2  text-xs ml-4">
                 <label class="font-semibold text-gray-600 py-2"></label>
-                <Calendar v-model="dates" selectionMode="range" :manualInput="false" showIcon
+                <Calendar v-model="dates" selectionMode="range" :manualInput="false" showIcon dateFormat="dd/mm/yy"
                   placeholder="Entrer les Date" class="h-10 px-4 laceholder-gray-500 border rounded"
-                  style="width: 250px;  padding:0" />
+                  style="width: 250px; padding:1px" />
               </div>
               <div class=" space-y-2 w-full text-xs ml-4">
                 <label class="font-semibold text-gray-600 py-2"></label>
-                <button
+                <button @click="searchDate()"
                   class="bg-green-pri w-full hover:bg-white text-white  hover:text-green-pri border border-green-pri transition duration-200 font-semibold py-2 px-4 mb-5 rounded">
                   RECHERCHER
                 </button>
@@ -37,7 +36,7 @@
         </thead>
       </table>
     </div>
-    <TableRetraite v-if="!isLoad" :dataList="dataList"/>
+    <TableRetraite v-if="!isLoad" :dataList="dataList" />
 
     <SkeletRetraiteVue v-if="isLoad" />
   </div>
@@ -56,38 +55,39 @@ export default {
   components: {
     TableRetraite, Calendar, SkeletRetraiteVue,
     Menubar
-},
+  },
   data() {
     return {
       dataList: null,
+      titre: 'Liste des agents avec sa date de retraite',
       dates: null,
-      isLoad:true,
+      isLoad: true,
       items: [
-                {
-                    label: 'FILTRES',
-                    icon: 'fa-solid fa-sliders',
-                    items: [
-                        {
-                            label: ' Agents retraite bientot',
-                            icon: 'pi pi-bolt',
-                            command: () => {
-                              this.getAllRetraite()
-                            }
-                        },
-                        {
-                            label: 'agents retraite entard ',
-                            icon: 'pi pi-bolt',
-                            command: () => {
-                              this.getAllRetraite()
-                            }
-                        },
-                    ]
-                }
-            ]
+        {
+          label: 'FILTRES',
+          icon: 'fa-solid fa-sliders',
+          items: [
+            {
+              label: ' Agents retraite bientot',
+              icon: 'pi pi-bolt',
+              command: () => {
+                this.getAllRetraite1ans()
+              }
+            },
+            {
+              label: 'agents retraite entard ',
+              icon: 'pi pi-bolt',
+              command: () => {
+                this.getAllRetraiteTard()
+              }
+            },
+          ]
+        }
+      ]
 
     }
   },
-  mounted() {   
+  mounted() {
 
     this.getAllRetraite()
   },
@@ -95,18 +95,72 @@ export default {
     async getAllRetraite() {
       this.isLoad = true
       try {
-        const response = await Axios.get('/allAgentsRetraite')
+        const response = await Axios.get('/indexRetraite?retraite=true')
         this.dataList = response.data.DataAgents;
+       
       } catch (error) {
         console.log("error dans l'axios: ", error)
       } finally {
         this.isLoad = false
       }
-      
+
 
     },
-    searchDate() {
-      console.log(this.dates)
+    async getAllRetraite1ans() {
+      this.isLoad = true
+      try {
+        const response = await Axios.get('/indexRetraite?retraite1ans=true')
+        this.dataList = response.data.DataAgents;
+        this.titre = 'Liste des agents qui seront prend sa retraite dans 1 an'
+      } catch (error) {
+        console.log("error dans l'axios: ", error)
+      } finally {
+        this.isLoad = false
+      }
+
+    },
+    async getAllRetraiteTard() {
+      this.isLoad = true
+      try {
+        const response = await Axios.get('/indexRetraite?retraiteTard=true')
+        this.dataList = response.data.DataAgents;
+        this.titre = 'Liste des agents qui ont plus de 60 ans et tard sa retraite'
+      } catch (error) {
+        console.log("error dans l'axios: ", error)
+      } finally {
+        this.isLoad = false
+      }
+
+    },
+    async searchDate() {
+      if (this.dates == null) {
+        console.log('aucun date selectionner')
+      } else {
+        var debut = this.dates[0] 
+        var fin = this.dates[1]
+        if (debut == '' && fin == '') {
+          var date_debut = this.formatDate(debut)
+          var date_fin = this.formatDate(fin)
+
+          var donnee = new FormData();
+          donnee.append('datedebut', date_debut);
+          donnee.append('datefin', date_fin);
+          this.isLoad = true
+          try {
+            const response = await Axios.post('/retraiteDeuxDate', donnee)
+
+            this.dataList = response.data.DataAgents;
+          } catch (error) {
+            console.log("error dans l'axios: ", error)
+          } finally {
+            this.isLoad = false
+          }
+        }
+
+      }
+    },
+    formatDate(date) {
+      return date.toISOString().slice(0, 19);
     }
   },
 

@@ -10,7 +10,7 @@ import ToastService from 'primevue/toastservice';
 import 'primevue/resources/primevue.min.css';
 import 'primevue/resources/themes/saga-green/theme.css';
 import 'primeicons/primeicons.css';
-
+import 'vue-multiselect/dist/vue-multiselect.css';
 
 import './assets/css/tailwind.css';
 import '@fortawesome/fontawesome-free/css/all.css';

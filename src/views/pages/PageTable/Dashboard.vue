@@ -31,7 +31,7 @@
 
 <script>
 import CardStatVue from '@/components/CardStat.vue'
-
+import Axios from '@/_service/caller.service';
 export default {
   name: 'HomePage',
   components: {
@@ -43,9 +43,23 @@ export default {
     }
   },
   mounted() {
-
-
+    // this.getCount();
   },
+  methods:{
+    // async getCount() {
+    //   this.isLoad = true
+    //   try {
+    //     const response = await Axios.get('/countAgents')
+    //     var data = response.data;
+    //     console.log(data)
+    //   } catch (error) {
+    //     console.log("error dans l'axios: ", error)
+    //   } finally {
+    //     this.isLoad = false
+    //   }
+
+    // },
+  }
 
 
 }

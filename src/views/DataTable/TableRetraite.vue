@@ -2,7 +2,12 @@
     <div class="mt-8 bg-white p-4 shadow rounded-lg">
         <div class="bg-white p-4 rounded-md mt-4">
             <div class="flex justify-between items-center max-md:flex-col">
-                <h2 class="text-gray-500 text-lg font-semibold pb-4">Liste des agents Retraiter</h2>
+                <h2 class="text-gray-500 text-lg font-semibold pb-4">
+                    <button @click="visible = true"
+                        class="bg-green-pri hover:bg-green-sec text-white font-semibold py-2 px-4  rounded">
+                        <i class="fa-solid fa-user-plus"></i> Exporter
+                    </button>
+                </h2>
                 <!-- Recherche input en top -->
                 <div class="relative max-w-md w-full mb-5">
                     <div class="absolute top-1 left-2 inline-flex items-center p-2">
@@ -52,12 +57,12 @@
                             section
                         </th>
                         <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-                            Ministere
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            UADM
                         </th>
                         <th
                             class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-                            Actions
+                            Details
                         </th>
                     </tr>
                 </thead>
@@ -73,9 +78,7 @@
                         <td class="py-2 px-4 border-b border-grey-light "> {{ data.section }}</td>
                         <td class="py-2 px-4 border-b border-grey-light"> {{ data.ministere }}</td>
                         <td class="py-2 px-4 border-b border-grey-light text-center"> 
-                            <a @click.prevent="open()" title="Suspend user" class="text-[#e1b14f] hover:text-[#ebc371]">
-                                <i class="fa-solid fa-file" style="font-size: 1.3rem"></i>
-                            </a>
+                            <ModalDetailler />
                         </td>
                     </tr>
                 </tbody>
@@ -92,11 +95,12 @@
 <script>
 import Paginator from 'primevue/paginator';
 import Skeleton from 'primevue/skeleton';
+import ModalDetailler from '@/components/ModalDetailler.vue';
 export default {
     name: 'TableRecette',
     components: {
         Skeleton,
-        Paginator
+        Paginator,ModalDetailler
     },
     props: {
         dataList: Array,
@@ -116,9 +120,7 @@ export default {
                 return this.dataList.filter(item => {
                     return item.agent_matricule.toLowerCase().includes(query)
                         || item.noms.toLowerCase().includes(query)
-                        || item.status.toLowerCase().includes(query)
                         || item.date_retrait.toLowerCase().includes(query)
-                        || item.section.toLowerCase().includes(query);
                 });
             }
             if (!this.dataList) {
@@ -129,14 +131,13 @@ export default {
         },
         isDateVide() {
             return function (data, donnee) {
-                return data.date_naissance == '1900-01-01' ? '' : donnee
+                return data.date_naissance == null ? '' : donnee
             };
         },
 
     },
     methods: {
-        handlePagination(event){
-            console.log(event)
+        handlePagination(event){      
             this.first = event.first
         }
        

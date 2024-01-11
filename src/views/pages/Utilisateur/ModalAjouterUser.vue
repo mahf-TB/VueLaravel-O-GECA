@@ -1,19 +1,31 @@
 <template>
     <div>
-        <Dialog v-model:visible="visible" modal header="Formulaire d'ajouter Nouvelle Utilisateur"
+        <Dialog v-model:visible="visible" modal header="Formulaire d'ajouter nouveaux utilisateur"
             :style="{ width: '50rem' }" :breakpoints="{ '890px': '90vw', '575px': '90vw' }">
             <div class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
-                <!-- matricule -->
-                <label for="mat" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
-                    Matricule</label>
-                <input id="mat" v-model="user.matricule"
-                    class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-                    placeholder="XXYYXX" />
+                <div class="flex">
+                    <div class="w-full">
+                        <!-- matricule -->
+                        <label for="mat" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
+                            Matricule<span class="text-red-500">*</span></label>
+                        <input id="mat" v-model="user.matricule"
+                            class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                            placeholder="XXYYXX" />
+                    </div>
+                    <!-- prenom -->
+                    <div class="w-full ml-1">
+                        <label for="name2" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
+                            Nom d'utilisateur <span class="text-red-500">*</span></label>
+                        <input id="name2" v-model="user.username"
+                            class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+                            placeholder="James" />
+                    </div>
+                </div>
                 <div class="flex">
                     <!-- nom -->
                     <div class="w-full">
                         <label for="name1" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
-                            Nom</label>
+                            Nom <span class="text-red-500">*</span></label>
                         <input id="name1" v-model="user.nom"
                             class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
                             placeholder="RAKOTO" />
@@ -57,9 +69,11 @@
                 <label for="expiry" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Section
                 </label>
                 <div class="relative mb-5 mt-2">
-                    <MultiSelect v-model="Sections" :options="sectionValues" display="chip" filter optionLabel="uadm_libelle"
-                        placeholder="Select Cities"  panelClass="custom-multiselect-panel" 
-                        class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" />
+                    <VueMultiselect :model-value="Sections" @update:model-value="updateSelected" :options="sectionValues"
+                        :multiple="true" label="uadm_libelle" track-by="uadm_code" :loading="isLoading" placeholder="Search or add a tag" />
+                    <!-- <MultiSelect v-model="Sections" :options="sectionValues" display="chip" filter
+                        optionLabel="uadm_libelle" placeholder="Select Cities" panelClass="custom-multiselect-panel"
+                        class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border" /> -->
                 </div>
                 <div class="flex items-center justify-start w-full">
                     <button
@@ -90,6 +104,8 @@ import Dropdown from 'primevue/dropdown';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import MultiSelect from "primevue/multiselect";
+import VueMultiselect from "vue-multiselect";
+
 
 import { ref } from 'vue';
 export default {
@@ -100,11 +116,13 @@ export default {
     components: {
         Dialog, Buttons,
         Dropdown, Password,
-        InputText, MultiSelect
+        InputText, MultiSelect, VueMultiselect
     },
     data() {
         return {
-            sectionValues: null
+            sectionValues: null,
+            isLoading: false
+            
         }
     },
     mounted() {
@@ -112,14 +130,22 @@ export default {
     },
     methods: {
         getSection() {
+            this.isLoading = true
             Axios.get('/uadm').then((response) => {
                 if (response.status == 200) {
                     this.sectionValues = response.data.dataSection
+                    this.isLoading = false
                 }
             }).catch((error) => {
                 console.log("error dans l'axios: ", error)
             })
-        }
+        },
+        updateSelected(newValue) {
+            console.log(typeof newValue);
+            this.Sections = newValue;
+            this.$emit("update:modelValue", newValue);
+            console.log(this.Sections)
+        },
     },
     setup(props) {
         const Sections = ref(null)
@@ -127,6 +153,7 @@ export default {
         const SecArray = []
         const user = {
             matricule: '',
+            username: '',
             nom: '',
             prenom: '',
             email: '',
@@ -136,6 +163,7 @@ export default {
         const toast = useToast();
         const SaveUser = () => {
             if (!user.matricule || !user.nom || !user.prenom || !user.email || !user.motdepasse || !user.role) {
+                console.log(Sections.value)
                 Sections.value.forEach(element => {
                     SecArray.push(element.uadm_code)
                 });
@@ -143,7 +171,9 @@ export default {
             } else {
                 //valeur de la user dans input
                 var donnee = new FormData();
+
                 donnee.append('matricule', user.matricule);
+                donnee.append('username', user.username);
                 donnee.append('nom', user.nom);
                 donnee.append('prenom', user.prenom);
                 donnee.append('email', user.email);
@@ -154,9 +184,7 @@ export default {
                 Axios.post('/auth/addUser', donnee).then((response) => {
                     if (response.data.status == 201) {
                         console.log(response.data.user.id)
-
-                        //route axios ajouter user et UADM
-                        //ajouter valeur uadm dans tableau
+                        //route axios ajouter user et UADM //ajouter valeur uadm dans tableau
                         if (Sections.value) {
                             Sections.value.forEach(element => {
                                 SecArray.push(element.uadm_code)
@@ -172,7 +200,7 @@ export default {
                                 console.log("error dans l'axios: ", error)
                             })
                         } else {
-                            toast.add({ severity: 'success', summary: 'Successful', detail: `${response.data.message}`, life: 3000 });
+                            toast.add({ severity: 'error', summary: 'Successful', detail: `${response.data.message}`, life: 3000 });
                             visible.value = false;
                             props.getAllUser();
                             initUser()
@@ -185,16 +213,16 @@ export default {
                 })
             }
         }
-        const initUser = () =>{
+        const initUser = () => {
             user.matricule = '',
                 user.nom = '',
                 user.prenom = '',
                 user.email = '',
                 user.motdepasse = '',
-                user.role = 'RH'     
+                user.role = 'RH',
+                Sections.value = null
         }
-            
-       
+
         return {
             SaveUser, user, visible, Sections
         }

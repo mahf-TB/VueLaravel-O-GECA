@@ -18,22 +18,22 @@
           <RouterLink to="/avancement"
             class="block text-gray-100 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-green-sec hover:to-green-sec hover:text-white">
             <i class="fa-brands fa-atlassian"></i>
-              <span>vancement</span>
+            <span>vancement</span>
           </RouterLink>
         </li>
         <li class=" px-2">
-          
+
           <RouterLink to="/contractuel"
             class="block text-gray-100 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-green-sec hover:to-green-sec hover:text-white">
             <i class="fa-solid fa-c"></i>
-              <span>ontractuel</span>
+            <span>ontractuel</span>
           </RouterLink>
         </li>
         <li class=" px-2">
           <RouterLink to="/retraite"
             class="block text-gray-100 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-green-sec hover:to-green-sec hover:text-white">
             <i class="fa-solid fa-r"></i>
-              <span>etraite</span>
+            <span>etraite</span>
           </RouterLink>
         </li>
 
@@ -67,14 +67,28 @@
   </div>
 </template>
 <script>
+import Swal from 'sweetalert2';
 export default {
   name: "SlideBar",
   mounted() {
   },
   methods: {
-    seDeconnect() {
-      localStorage.clear();
-      this.$router.push({ name: "Login" });
+
+    async seDeconnect() {
+      const result = await Swal.fire({
+        title: 'Se deconnecter du compte?',
+        text: "Cette action est irréversible!",
+        // icon: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'Annuler',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Déconnexion'
+      });
+      if (result.isConfirmed) {
+        localStorage.clear();
+        this.$router.push({ name: "Login" });
+      }
     },
   },
 };

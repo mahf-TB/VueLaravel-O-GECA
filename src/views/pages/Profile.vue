@@ -5,19 +5,19 @@
                 class="relative flex flex-col items-center rounded-[20px] h-[500px] w-[600px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
                 <div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
                     <img src='https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/banner.ef572d78f29b0fee0a09.png'
-                        class="absolute flex h-32 w-full justify-center rounded-xl bg-cover">
+                        class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"  alt="Photo de couverture">
                     <div
                         class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-[#79bd7011] dark:!border-navy-700">
                         <img class="h-full w-full rounded-full"
                             src='https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/avatar11.1060b63041fdffa5f8ef.png'
-                            alt="" />
+                            alt="Photo de profile" />
                     </div>
                 </div>
                 <div class="mt-16 flex flex-col items-center">
                     <h4 class="text-xl font-bold text-green-pri ">
-                        {{ dataUser.nom }} {{ dataUser.prenom }}
+                        {{ dataUser.nom }} {{ dataUser.prenom }} <span class="text-sm text-gray-500">({{ dataUser.username }})</span>
                     </h4>
-                    <p class="text-base font-normal text-gray-600">{{ dataUser.role }}</p>
+                    <p class="text-base font-normal text-gray-600">{{ dataUser.role == 'RH'?'Resoucce Humaine' : 'Administrateur'}}</p>
                 </div>
 
                 <div class="bg-gradient-to-r from-green-font to-green-pri w-[550px] h-px  m-3"></div>
