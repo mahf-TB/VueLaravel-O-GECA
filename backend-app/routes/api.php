@@ -8,10 +8,11 @@ use App\Http\Controllers\Agents\DetailleController;
 use App\Http\Controllers\Agents\RetraiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -61,8 +62,17 @@ Route::get('/indexRetraite',[RetraiteController::class,'indexRetraite'] );
 Route::post('/retraiteDeuxDate',[RetraiteController::class,'getRetraiteDeuxDate'] );
 
 
+//route vers profile 
+Route::post('/importImage',[ProfileController::class,'uploadImage'] );
+Route::post('/updateUserAuth',[ProfileController::class,'updateUserAuth'] );
+Route::post('/changePassword',[ProfileController::class,'changePassword'] );
+
+
 // recuperer les données detailler sur un agent 
 Route::get('/indexDetaille/{id}',[DetailleController::class,'indexDetaille'] );
+Route::get('/indexDetailleContrat/{id}',[DetailleController::class,'indexDetailleContrat'] );
+Route::get('/indexDetailleRetraite/{id}',[DetailleController::class,'indexDetailleRetraite'] );
 
 
 Route::get('/countAgents',[DashboardController::class,'countAgents'] );
+Route::get('/indexHee',[DashboardController::class,'indexHee'] );

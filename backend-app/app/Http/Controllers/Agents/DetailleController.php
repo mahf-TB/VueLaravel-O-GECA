@@ -63,4 +63,68 @@ class DetailleController extends Controller
             "code" => 200
         ]);
     }
+    public function indexDetailleContrat($id)
+    {
+        $agent = $this->AgentDetailler($id);
+
+        $agentFiltre =  $agent->map(function ($agent) {
+            $debut_contrat = Carbon::parse($agent->debut_contrat);
+            $fin_contrat = $debut_contrat->copy()->addYear(2);
+            return [
+                "id" => $agent->id,
+                "agent_matricule" => $agent->agent_matricule,
+                "noms" => $agent->nom . ' ' . $agent->prenom,
+                "CIN" => $agent->cin,
+                "status" => $agent->status,
+                "corps" => $agent->code_corps,
+                "grade" => $agent->code_grade,
+                "debut_contrat" => $debut_contrat->toDateString(),
+                "fin_contrat" => $fin_contrat->toDateString(),
+                "uadm" => $agent->uadms == null ? '' :  $agent->uadms->uadm_libelle,
+                "section" => $agent->section->soa_libelle,
+                "ministere" => $agent->ministere->ministere_libelle,
+                "district" => $agent->fiv->districte_code.' '.$agent->fiv->districte_libelle,
+                "sanction" => $agent->sanction->sanction_libelle,
+              
+            ];
+        });
+
+        return response()->json([
+            "DataAgents" => $agentFiltre,
+            "message" => 'Tout les donnees sont recuperer',
+            "code" => 200
+        ]);
+    }
+    public function indexDetailleRetraite($id)
+    {
+        $agent = $this->AgentDetailler($id);
+
+        $agentFiltre =  $agent->map(function ($agent) {
+            $date_naissance = Carbon::parse($agent->date_naissance);
+            $date_retrait = $date_naissance->copy()->addYear(60);
+            return [
+                "id" => $agent->id,
+                "agent_matricule" => $agent->agent_matricule,
+                "noms" => $agent->nom . ' ' . $agent->prenom,
+                "CIN" => $agent->cin,
+                "status" => $agent->status,
+                "corps" => $agent->code_corps,
+                "grade" => $agent->code_grade,
+                "date_naissance" => $date_naissance->toDateString(),
+                "date_retrait" => $date_retrait->toDateString(),
+                "uadm" => $agent->uadms == null ? '' :  $agent->uadms->uadm_libelle,
+                "section" => $agent->section->soa_libelle,
+                "ministere" => $agent->ministere->ministere_libelle,
+                "district" => $agent->fiv->districte_code.' '.$agent->fiv->districte_libelle,
+                "sanction" => $agent->sanction->sanction_libelle,
+              
+            ];
+        });
+
+        return response()->json([
+            "DataAgents" => $agentFiltre,
+            "message" => 'Tout les donnees sont recuperer',
+            "code" => 200
+        ]);
+    }
 }

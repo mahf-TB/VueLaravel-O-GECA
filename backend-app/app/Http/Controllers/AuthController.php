@@ -11,21 +11,21 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'addUser']]);
     }
 
     public function login(Request $request)
     {
         $request->validate([
-            'matricule-mail' => 'required',
+            'username' => 'required',
             'password' => 'required',
         ]);
 
-        $loginId = $request->input('matricule-mail');
-        $isEmail = filter_var($loginId, FILTER_VALIDATE_EMAIL) !== false;
+        // $loginId = $request->input('username');
+        // $isEmail = filter_var($loginId, FILTER_VALIDATE_EMAIL) !== false;
 
         $credentials = [
-            $isEmail ? 'email' : 'matricule' => $loginId,
+             'username' => $request->input('username'),
             'password' => $request->input('password'),
         ];
 
@@ -51,7 +51,17 @@ class AuthController extends Controller
 
     public function getUser()
     {
-        return response()->json(auth()->user());
+        $user = Auth::user();
+
+        // Utilisez l'URL de l'image directement
+        if ($user->pdp != null) {
+            $user->pdp = 'http://127.0.0.1:8000/storage/'. $user->pdp;
+        }else {
+            # code...
+            $user->pdp = 'http://127.0.0.1:8000/storage/photo/avatar.jpg';
+        }
+
+        return response()->json($user);
     }
 
 

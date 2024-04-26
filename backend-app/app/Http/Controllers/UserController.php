@@ -45,33 +45,43 @@ class UserController extends Controller
                 'user' => $user,
                 'status' => 200
             ]);
-        } 
+        }
     }
 
     public function updateUser($id, Request $request)
     {
-        
-        $user = User::find($id);
-        $users= $user->update([
-            "matricule" => $request->matricule,
-            "username" => $request->username,
-            "nom" => $request->nom,
-            "prenom" => $request->prenom,
-            "email" => $request->email,
-            "role" => $request->role,
-        ]);
-        // $users = $user->save();
-        if ($users) {
+        try {
+            $user = User::find($id);
+            $users = $user->update([
+                "matricule" => $request->matricule,
+                "username" => $request->username,
+                "nom" => $request->nom,
+                "prenom" => $request->prenom,
+                "email" => $request->email,
+                "role" => $request->role,
+            ]);
+            if ($users) {
+                // Supprimer les relations user_uadm existantesjson_encode($uadms)
+                user_uadm::where('user_id', $id)->delete();
+                $uadms =$request->uadmArray;
+                foreach ($uadms as $uadm) {
+                    user_uadm::create([
+                        "user_id" => $id,
+                        "code_uadm" => $uadm,
+                    ]);
+                }
+            }
+
             return response()->json([
                 'message' => 'successeful...',
-                'user' => $users,
+                'user' => $uadms,
                 'status' => 200
             ]);
-        }else{
-            return  response()->json([
-                'message' => 'Update d\'user echec ...',
-                'user' => $user,
-                'status' => 201
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la mise à jour',
+                'error' => $e->getMessage(),
+                'status' => 500
             ]);
         }
     }
@@ -85,7 +95,7 @@ class UserController extends Controller
             "code" => 200
         ]);
     }
-    
+
     public function addUserUadm($id, Request $request)
     {
         $uadms = $request->input('SecArray');
@@ -108,7 +118,7 @@ class UserController extends Controller
         $tabuadm = $uadm->pluck('code_uadm')->toArray();
         $uadms = Uadm::whereIn('uadm_code', $tabuadm)->get();
         return response()->json([
-            "user_id"=> $id,
+            "user_id" => $id,
             "UadmDeUser" => $uadms,
             "message" => 'Tout les donnees sont recuperer',
             "code" => 200

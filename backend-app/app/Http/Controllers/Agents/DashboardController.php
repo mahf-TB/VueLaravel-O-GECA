@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $countC1 = $this->contrat6mois();
         $countC2 = $this->contratTard();
         $countR1 = $this->retraite12mois();
-        $countR2 = $this->retraitTard();
+        $countHee = $this->HeeCount();
         return response()->json([
             "user" => $user_role,
             "Avenant6mois" => $countA1,
@@ -28,7 +28,7 @@ class DashboardController extends Controller
             "contrat6mois" => $countC1,
             "contratTard" => $countC2,
             "Retrait1ans" => $countR1,
-            "RetraitTard" => $countR2,
+            "heeCount" => $countHee,
             "message" => 'Tout les count donnees sont recuperer',
             "code" => 200
         ]);
@@ -170,7 +170,29 @@ class DashboardController extends Controller
                 })->count();
         }
     }
-    public function retraitTard()
+    public function HeeCount()
+    {
+        $user = Auth::user();
+        $user_role = $user->role;
+        if ($user_role == 'RH') {
+            $user_uadms = $user->uadms;
+            $user_uadm = $user_uadms->pluck('code_uadm');
+            return Agent::with(['ministere', 'section', 'grades', 'uadms', 'hee'])
+                ->whereIn('code_uadm', $user_uadm)
+                ->get()
+                ->filter(function ($agent) {
+                    return $agent->hee;
+                })->count();
+        } else {
+            return Agent::with(['ministere', 'section', 'grades', 'uadms', 'hee'])
+                ->get()
+                ->filter(function ($agent) {
+                    return $agent->hee;
+                })->count();
+        }
+    }
+
+    public function agentsHEE()
     {
         $user = Auth::user();
         $user_role = $user->role;
@@ -178,21 +200,47 @@ class DashboardController extends Controller
         if ($user_role == 'RH') {
             $user_uadms = $user->uadms;
             $user_uadm = $user_uadms->pluck('code_uadm');
-            return Agent::with(['ministere', 'section', 'grades', 'uadms'])
-                ->whereIn('code_uadm', $user_uadm)->get()
-                ->filter(function ($agent) {
-                    $date_naissance = Carbon::parse($agent->date_naissance);
-                    $date_retrait = $date_naissance->copy()->addYear(60);
-                    return $date_retrait->lt(Carbon::now());
-                })->count();
-        } else {
-            return Agent::with(['ministere', 'section', 'grades', 'uadms'])
+            return Agent::with(['ministere', 'section', 'grades', 'uadms', 'hee'])
+                ->whereIn('code_uadm', $user_uadm)
                 ->get()
                 ->filter(function ($agent) {
-                    $date_naissance = Carbon::parse($agent->date_naissance);
-                    $date_retrait = $date_naissance->copy()->addYear(60);
-                    return $date_retrait->lt(Carbon::now());
-                })->count();
+                    return $agent->hee;
+                })->values();
+        } else {
+            return Agent::with(['ministere', 'section', 'grades', 'uadms', 'hee'])
+                ->get()
+                ->filter(function ($agent) {
+                    return $agent->hee;
+                })->values();
         }
+    }
+    public function indexHee()
+    {
+        $user = Auth::user();
+        $user_role = $user->role;
+
+        $agents = $this->agentsHEE();
+        $agentFiltre =  $agents->map(function ($agent) {
+            $date_naissance = Carbon::parse($agent->date_naissance);
+            return [
+                "id" => $agent->id,
+                "agent_matricule" => $agent->agent_matricule,
+                "noms" => $agent->nom . ' ' . $agent->prenom,
+                "status" => $agent->status,
+                "corps" => $agent->code_corps,
+                "grade" => $agent->code_grade,
+                "hee" => $agent->hee->hee_libelle,
+                "date_naissance" => $date_naissance->toDateString(),
+                "uadm" => $agent->uadms == null ? '' :  $agent->uadms->uadm_libelle,
+                "section" => $agent->section->soa_libelle,
+                "ministere" => $agent->ministere->ministere_libelle,
+            ];
+        })->values();
+        return response()->json([
+            "user" => $user_role,
+            "DataAgents" => $agentFiltre,
+            "message" => 'Tout les donnees sont recuperer',
+            "code" => 200
+        ]);
     }
 }
