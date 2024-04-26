@@ -13,12 +13,16 @@
         </button>
       </div>
     </div>
+
     <div class="space-x-5 pr-3">
       <div class="relative group">
         <button @click="dropdownBtn()"
-          class="flex justify-center items-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
-          <i class="fa-regular fa-circle-user text-gray-500 text-lg pr-2"></i>
-          <span class="text-gray-500 text-lg ml-2  md:flex hidden"><u> {{ nom }}</u></span>
+          class="flex justify-center items-center w-full px-4 py-2 text-sm font-medium text-gray-700    rounded-md shadow-sm focus:outline-none  ">
+          <!-- <i class="fa-regular fa-circle-user text-gray-500 text-lg pr-2"></i> -->
+          <div class=" h-[35px] w-[35px]  rounded-full">
+            <img class="h-full w-full rounded-full object-cover object-center" :src="image"  alt="Photo de profile" />
+          </div>
+          <span class="text-white text-lg ml-2  md:flex hidden"><u> {{ nom }}</u></span>
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5  -mr-1" style="widows: 30px; height: 30px;"
             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd"
@@ -29,7 +33,7 @@
         <div id="dropdown-menu"
           class="hidden absolute right-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-2 space-y-1 w-48">
           <!-- Dropdown content goes here -->
-          <RouterLink to="/profile" @click="dropdownBtn()"
+          <RouterLink to="/profile" @click="dropdownBtn()" :class="mb"
             class="block text-gray-500 py-2.5 px-4 my-4 mt-0 rounded transition duration-200 hover:bg-gradient-to-r hover:from-green-pri hover:to-green-pri hover:text-white">
             <i class="fas fa-user  text-lg pr-4"></i>Mon Profile
           </RouterLink>
@@ -51,7 +55,9 @@ export default {
     return {
       nom: '',
       isOpen: false,
-      isAdmin: false
+      isAdmin: false,
+      image:null,
+      mb:''
     }
   },
   mounted() {
@@ -60,13 +66,15 @@ export default {
       if (token) {
         Axios.get('/auth/user').then(response => {
           this.nom = response.data.nom
+          this.image = response.data.pdp
           if (response.data.role == 'ADMIN') {
             this.isAdmin = true;
+          }else{
+            this.mb ='mb-0'
           }
         }).catch(error => {
           console.log("error dans l'axios: ", error)
-          // localStorage.clear();
-          // this.$router.push({ name: "Login" });
+          
         })
       }
     } catch (error) {

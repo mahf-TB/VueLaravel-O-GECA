@@ -55,8 +55,8 @@
           </section>
           <!-- sticky footer -->
           <footer class="flex justify-end px-8 pb-8 pt-4">
-            <button @click="submitFile()"
-              class="flex justify-between items-center rounded-sm px-3 py-1 bg-green-pri hover:bg-green-500 text-white focus:shadow-outline focus:outline-none">
+            <button @click="submitFile()" :disabled="save" :class="classeSave"
+              class="flex justify-between items-center rounded-sm px-3 py-1 bg-green-pri text-white focus:shadow-outline focus:outline-none">
               <i v-if="isLoad" class="pi pi-spin pi-spinner mr-2" style="font-size: 1rem"></i>Importer Maintenant
             </button>
             <button @click.prevent="reinitAgents()"
@@ -68,125 +68,6 @@
         </article>
       </main>
     </div>
-    <!-- <script>
-const fileTempl = document.getElementById("file-template"),
-  imageTempl = document.getElementById("image-template"),
-  empty = document.getElementById("empty");
-
-// use to store pre selected files
-let FILES = {};
-
-// check if file is of type image and prepend the initialied
-// template to the target element
-function addFile(target, file) {
-  const isImage = file.type.match("image.*"),
-    objectURL = URL.createObjectURL(file);
-
-  const clone = isImage
-    ? imageTempl.content.cloneNode(true)
-    : fileTempl.content.cloneNode(true);
-
-  clone.querySelector("h1").textContent = file.name;
-  clone.querySelector("li").id = objectURL;
-  clone.querySelector(".delete").dataset.target = objectURL;
-  clone.querySelector(".size").textContent =
-    file.size > 1024
-      ? file.size > 1048576
-        ? Math.round(file.size / 1048576) + "mb"
-        : Math.round(file.size / 1024) + "kb"
-      : file.size + "b";
-
-  isImage &&
-    Object.assign(clone.querySelector("img"), {
-      src: objectURL,
-      alt: file.name
-    });
-
-  empty.classList.add("hidden");
-  target.prepend(clone);
-
-  FILES[objectURL] = file;
-}
-
-const gallery = document.getElementById("gallery"),
-  overlay = document.getElementById("overlay");
-
-// click the hidden input of type file if the visible button is clicked
-// and capture the selected files
-const hidden = document.getElementById("hidden-input");
-document.getElementById("button").onclick = () => hidden.click();
-hidden.onchange = (e) => {
-  for (const file of e.target.files) {
-    addFile(gallery, file);
-  }
-};
-
-// use to check if a file is being dragged
-const hasFiles = ({ dataTransfer: { types = [] } }) =>
-  types.indexOf("Files") > -1;
-
-// use to drag dragenter and dragleave events.
-// this is to know if the outermost parent is dragged over
-// without issues due to drag events on its children
-let counter = 0;
-
-// reset counter and append file to gallery when file is dropped
-function dropHandler(ev) {
-  ev.preventDefault();
-  for (const file of ev.dataTransfer.files) {
-    addFile(gallery, file);
-    overlay.classList.remove("draggedover");
-    counter = 0;
-  }
-}
-
-// only react to actual files being dragged
-function dragEnterHandler(e) {
-  e.preventDefault();
-  if (!hasFiles(e)) {
-    return;
-  }
-  ++counter && overlay.classList.add("draggedover");
-}
-
-function dragLeaveHandler(e) {
-  1 > --counter && overlay.classList.remove("draggedover");
-}
-
-function dragOverHandler(e) {
-  if (hasFiles(e)) {
-    e.preventDefault();
-  }
-}
-
-// event delegation to caputre delete events
-// fron the waste buckets in the file preview cards
-gallery.onclick = ({ target }) => {
-  if (target.classList.contains("delete")) {
-    const ou = target.dataset.target;
-    document.getElementById(ou).remove(ou);
-    gallery.children.length === 1 && empty.classList.remove("hidden");
-    delete FILES[ou];
-  }
-};
-
-// print all selected files
-document.getElementById("submit").onclick = () => {
-  alert(`Submitted Files:\n${JSON.stringify(FILES)}`);
-  console.log(FILES);
-};
-
-// clear entire selection
-document.getElementById("cancel").onclick = () => {
-  while (gallery.children.length > 0) {
-    gallery.lastChild.remove();
-  }
-  FILES = {};
-  empty.classList.remove("hidden");
-  gallery.append(empty);
-};
-
-</script> -->
   </div>
 </template>
   
@@ -212,6 +93,8 @@ export default {
       size: '',
       value: 0,
       isLoad: false,
+      save:true,
+      classeSave:'disabled:opacity-75'
     }
   },
   methods: {
@@ -219,6 +102,8 @@ export default {
       this.selectedFile = event.target.files[0];
       console.log(this.selectedFile)
       if (this.selectedFile) {
+        this.classeSave =''
+        this.save=false
         this.empty = false
         this.emptyFile = true
         this.name = this.selectedFile.name
@@ -243,7 +128,9 @@ export default {
       }
       const formData = new FormData();
       formData.append('file_agents', this.selectedFile);
+      this.classeSave ='disabled:opacity-75'
       this.isLoad = true
+      this.save=false
       Axios.post('/import', formData).then((response) => {
         console.log(response.data);
         if (response.data.status == 201) {
@@ -266,6 +153,13 @@ export default {
         }
       }).catch((error) => {
         console.log("error dans l'axios: ", error)
+        Swal.fire({
+            title: 'Error...!',
+            title: `Bad error: ${error.message}`,
+            icon: 'error',
+            timer: 4000
+          })
+        this.isLoad = false
       })
 
     },
@@ -281,7 +175,7 @@ export default {
         text: "Cette action est irréversible!",
         icon: 'warning',
         showCancelButton: true,
-        cancelButtonText:'Annuler',
+        cancelButtonText: 'Annuler',
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Oui, vider-le!'
@@ -303,70 +197,3 @@ export default {
   }
 }
 </script>
-
-<!-- <style>
-.hasImage:hover section {
-  background-color: rgba(5, 5, 5, 0.4);
-}
-.hasImage:hover button:hover {
-  background: rgba(5, 5, 5, 0.45);
-}
-
-#overlay p,
-i {
-  opacity: 0;
-}
-
-#overlay.draggedover {
-  background-color: rgba(255, 255, 255, 0.7);
-}
-#overlay.draggedover p,
-#overlay.draggedover i {
-  opacity: 1;
-}
-
-.group:hover .group-hover\:text-blue-800 {
-  color: #2b6cb0;
-}
-</style> -->
-<!-- 
-<template>
-  <div class="card">
-      <Toast></Toast>
-      <ProgressBar :value="value1" />
-  </div>
-</template>
-
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useToast } from "primevue/usetoast";
-
-onMounted(() => {
-  startProgress();
-});
-
-onBeforeUnmount(() => {
-  endProgress();
-});
-
-const toast = useToast();
-const value1 = ref(0);
-const interval = ref();
-const startProgress = () => {
-  interval.value = setInterval(() => {
-      let newValue = value1.value + Math.floor(Math.random() * 10) + 1;
-      if (newValue >= 100) {
-          newValue = 100;
-          toast.add({ severity: 'info', summary: 'Success', detail: 'Process Completed', life: 1000 });
-      }
-      value1.value = newValue;
-  }, 2000);
-};
-const endProgress = () => {
-  clearInterval(interval.value);
-  interval.value = null;
-};
-</script>
- -->
-
-

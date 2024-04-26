@@ -2,24 +2,26 @@
     <div class="mt-10 mb-10 md:ml-64">
         <div class="container flex flex-col justify-center items-center mt-[150px]">
             <div
-                class="relative flex flex-col items-center rounded-[20px] h-[500px] w-[600px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
-                <div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
-                    <img src='https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/banner.ef572d78f29b0fee0a09.png'
-                        class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"  alt="Photo de couverture">
+                class="relative flex flex-col items-center rounded-[20px] h-[500px] w-[600px] mx-auto p-2 bg-white bg-clip-border shadow-sm shadow-gray-500  dark:text-white ">
+                <div class="relative flex h-[150px] w-full justify-center rounded-xl">
+                    <div 
+                        class="flex h-full w-full justify-center bg-gradient-to-r from-green-font to-green-pri rounded-xl bg-cover" alt="Photo de couverture">
+                    </div>
                     <div
-                        class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-[#79bd7011] dark:!border-navy-700">
-                        <img class="h-full w-full rounded-full"
-                            src='https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/avatar11.1060b63041fdffa5f8ef.png'
-                            alt="Photo de profile" />
+                        class="absolute -bottom-12 flex h-[87px] w-[87px] items-center text-green-sec hover:text-gray-500 justify-center rounded-full border-[4px] hover:border-green-sec border-white bg-[#79bd7011] dark:!border-navy-700">
+                        <img class="h-full w-full rounded-full object-cover object-center" :src="dataUser.pdp"  alt="Photo de profile" />
+                        <ImageModalVue :imagePdp="dataUser.pdp" />
+                           
                     </div>
                 </div>
                 <div class="mt-16 flex flex-col items-center">
                     <h4 class="text-xl font-bold text-green-pri ">
-                        {{ dataUser.nom }} {{ dataUser.prenom }} <span class="text-sm text-gray-500">({{ dataUser.username }})</span>
+                        {{ dataUser.nom }} {{ dataUser.prenom }} <span class="text-sm text-gray-500">({{ dataUser.username
+                        }})</span>
                     </h4>
-                    <p class="text-base font-normal text-gray-600">{{ dataUser.role == 'RH'?'Resoucce Humaine' : 'Administrateur'}}</p>
+                    <p class="text-base font-normal text-gray-600">{{ dataUser.role == 'RH' ? 'Resoucce Humaine' :
+                        'Administrateur' }}</p>
                 </div>
-
                 <div class="bg-gradient-to-r from-green-font to-green-pri w-[550px] h-px  m-3"></div>
 
                 <div class="grid grid-cols-2 gap-4 px-2 w-full">
@@ -54,8 +56,9 @@
                 </div>
                 <div class="bg-gradient-to-r from-green-font to-green-pri w-[550px] h-px "></div>
                 <div class="flex justify-start w-[540px]">
-                    <div class="text-right mt-4">
+                    <div class="text-right mt-4 flex  items-center justify-around">
                         <modal-profile></modal-profile>
+                        <change-password></change-password>
                     </div>
                 </div>
             </div>
@@ -66,15 +69,18 @@
 
 <script>
 import Axios from "@/_service/caller.service";
-import ModalProfile from '@/components/ModalProfile.vue';
+import ModalProfile from '@/components/ProfileModal/ModalProfile.vue';
+import ImageModalVue from '@/components/ProfileModal/ImageModal.vue';
+import ChangePassword from "@/components/ProfileModal/ChangePassword.vue";
 export default {
     name: 'Profile',
     components: {
-        ModalProfile
+        ModalProfile,ImageModalVue,ChangePassword
     },
     data() {
         return {
-            dataUser: []
+            dataUser: [],
+            imagePdp:null
         }
     },
     mounted() {
@@ -82,8 +88,8 @@ export default {
             const token = JSON.parse(localStorage.getItem("token"));
             if (token) {
                 Axios.get('/auth/user').then(response => {
-                    console.log(response.data)
                     this.dataUser = response.data
+                    
                 }).catch(error => {
                     console.log("error dans l'axios: ", error)
                 })

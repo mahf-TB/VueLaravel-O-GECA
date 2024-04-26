@@ -19,68 +19,70 @@
         </div>
         <div class="my-1"></div>
         <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-6"></div>
-        <table class="w-full container table-auto text-sm">
-            <thead>
-                <tr class="text-sm leading-normal bg-green-font text-white">
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Matricule
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Username
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Nom
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Prenom
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Email
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Role
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                        Date création
-                    </th>
-                    <th
-                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-center">
-                        Actions
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="hover:bg-gray-400" v-for="(data, index) in paginatedData" v-bind:key="index">
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.matricule }}</td>
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.username }}</td>
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.nom }}</td>
+        <div class="overflow-x-scroll">
+            <table class="w-full container table-auto text-sm">
+                <thead>
+                    <tr class="text-sm leading-normal bg-green-font text-white">
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Matricule
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Username
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Nom
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Prenom
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Email
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Role
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                            Date création
+                        </th>
+                        <th
+                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-center">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-gray-400" v-for="(data, index) in paginatedData" v-bind:key="index">
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.matricule }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.username }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.nom }}</td>
 
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.prenom }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.prenom }}</td>
 
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.email }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.email }}</td>
 
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.role }}</td>
-                    <td class="py-2 px-4 border-b border-grey-light">{{ data.created_at }}</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-center">
-                        <div class="inline-flex items-center space-x-3">
-                            <SideBarUpdate :id="data.id" />
-                            <a @click.prevent="deleteUser(data.id)" title="Edit password"
-                                class="text-[#ff3e3e] hover:text-[#ff3e3e]">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </a>
-                            <ModalDetailler />
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <td class="py-2 px-4 border-b border-grey-light">{{ data.role }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light">{{ new Date(data.created_at).toLocaleDateString()  }}</td>
+                        <td class="py-2 px-4 border-b border-grey-light text-center">
+                            <div class="inline-flex items-center space-x-3">
+                                <SideBarUpdate :id="data.id" />
+                                <a @click.prevent="deleteUser(data.id)"
+                                    class="text-[#ff3e3e] hover:text-[#ff3e3e]">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                                <ModalDetailler />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="text-left mt-4">
             <Paginator :rows="itemsPerPage" :totalRecords="dataList.length"
                 template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
@@ -102,18 +104,18 @@ export default {
     name: 'TableRecette',
     components: {
         Toast, SideBarUpdate, ModalAjouterUserVue,
-        Paginator,ModalDetailler
+        Paginator, ModalDetailler
     },
     data() {
         return {
             dataList: [],
-            itemsPerPage: 5,
+            itemsPerPage: 10,
             first: 0,
             query: '',
         }
     },
     mounted() {
-        this.getAllUser()
+        this.getAllUser();
     },
     computed: {
         paginatedData() {
@@ -177,7 +179,6 @@ export default {
             console.log(item)
         },
         handlePagination(event) {
-
             this.first = event.first
         }
     }

@@ -1,6 +1,10 @@
 <template>
     <div>
-        <Skeleton width="19,5rem" height="10rem"></Skeleton>
+        <Skeleton width="19,5rem" height="10rem">
+            <Skeleton width="5" height="5rem">
+
+            </Skeleton>
+        </Skeleton>
     </div>
 </template>
 

@@ -14,9 +14,9 @@
                     </div>
                     <!-- prenom -->
                     <div class="w-full ml-1">
-                        <label for="name2" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
+                        <label for="name3" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
                             Nom d'utilisateur <span class="text-red-500">*</span></label>
-                        <input id="name2" v-model="user.username"
+                        <input id="name3" v-model="user.username"
                             class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
                             placeholder="James" />
                     </div>
@@ -26,7 +26,7 @@
                     <div class="w-full">
                         <label for="name1" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">
                             Nom <span class="text-red-500">*</span></label>
-                        <input id="name1" v-model="user.nom"
+                        <input id="name1" v-model="user.nom" style="text-transform:capitalize;" 
                             class="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
                             placeholder="RAKOTO" />
                     </div>
@@ -54,7 +54,7 @@
                             <line x1="11" y1="15" x2="13" y2="15" />
                         </svg>
                     </div>
-                    <input id="email2" v-model="user.email" type="text"
+                    <input id="email2" v-model="user.email" type="email"
                         class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-16 text-sm border-gray-300 rounded border"
                         placeholder="exemple@exemple.com" />
                 </div>
@@ -179,11 +179,11 @@ export default {
                 donnee.append('email', user.email);
                 donnee.append('password', user.motdepasse);
                 donnee.append('role', user.role);
-
+                console.log(donnee)
                 //route axios ajouter user
                 Axios.post('/auth/addUser', donnee).then((response) => {
                     if (response.data.status == 201) {
-                        console.log(response.data.user.id)
+                        console.log(response)
                         //route axios ajouter user et UADM //ajouter valeur uadm dans tableau
                         if (Sections.value) {
                             Sections.value.forEach(element => {
@@ -230,8 +230,8 @@ export default {
 }
 </script>
 <style>
-.custom-multiselect-panel {
+/* .custom-multiselect-panel {
     max-width: 500px;
     border: 1px solid rgb(3, 111, 3);
-}
+} */
 </style>

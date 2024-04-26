@@ -5,7 +5,7 @@
                 <h2 class="text-gray-500 text-lg font-semibold pb-4">
                     <button @click="visible = true"
                         class="bg-green-pri hover:bg-green-sec text-white font-semibold py-2 px-4  rounded">
-                        <i class="fa-solid fa-user-plus"></i> Export
+                        <i class="fa-solid fa-file-excel"></i> Export
                     </button>
                 </h2>
                 <!-- Recherche input en top -->

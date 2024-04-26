@@ -2,7 +2,7 @@
   <div class="mt-10 mb-10 md:ml-56">
     <!-- main content page -->
     <div class="mt-2 bg-white p-4 shadow rounded-lg">
-      <h2 class="text-gray-500 text-lg font-semibold pb-0">Rechrerche entre deux date</h2>
+      <h2 class="text-gray-500 text-lg font-semibold pb-0">Filtres et rechrerche entre deux date</h2>
       <div class="my-1"></div>
       <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-1"></div>
       <table class="w-full table-auto text-sm">
@@ -111,7 +111,7 @@ export default {
       try {
         const response = await Axios.get('/indexRetraite?retraite1ans=true')
         this.dataList = response.data.DataAgents;
-        this.titre = 'Liste des agents qui seront prend sa retraite dans 1 an'
+        this.titre = 'Liste des agents qui seront pris sa retraite dans 1 an'
       } catch (error) {
         console.log("error dans l'axios: ", error)
       } finally {
@@ -132,23 +132,23 @@ export default {
       }
 
     },
-    async searchDate() {
+    async searchDate() {` `
       if (this.dates == null) {
         console.log('aucun date selectionner')
       } else {
         var debut = this.dates[0] 
         var fin = this.dates[1]
-        if (debut == '' && fin == '') {
+        if (debut != '' && fin != '') {
           var date_debut = this.formatDate(debut)
           var date_fin = this.formatDate(fin)
-
+          
           var donnee = new FormData();
           donnee.append('datedebut', date_debut);
           donnee.append('datefin', date_fin);
           this.isLoad = true
           try {
             const response = await Axios.post('/retraiteDeuxDate', donnee)
-
+            console.log(response.data.DataAgents)
             this.dataList = response.data.DataAgents;
           } catch (error) {
             console.log("error dans l'axios: ", error)

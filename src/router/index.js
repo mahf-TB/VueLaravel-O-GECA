@@ -18,7 +18,7 @@ import UserListe from '@/views/pages/Utilisateur/UserListe.vue'
 
 const routes = [
   {
-    beforeEnter:authGuard.Connect,
+    // beforeEnter:authGuard.Connect,
     path: '/',
     name: 'Home',
     component: Layout,
@@ -30,7 +30,7 @@ const routes = [
       { path:'/profile', name:'Profile', component:Profile },
       { path:'/import', name:'ImportFile', component:Import },
       {
-        beforeEnter:authGuard.User,
+        // beforeEnter:authGuard.User,
         path: '/user',
         name: 'User',
         component: UserListe

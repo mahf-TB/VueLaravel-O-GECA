@@ -3,9 +3,10 @@
         <div class="bg-white p-4 rounded-md mt-4">
             <div class="flex justify-between items-center max-md:flex-col">
                 <h2 class="text-gray-500 text-lg font-semibold pb-4">
-                    <button @click="visible = true"
+                    <button @click="exportExcel('xls')"
                         class="bg-green-pri hover:bg-green-sec text-white font-semibold py-2 px-4  rounded">
-                        <i class="fa-solid fa-user-plus"></i> Exporter
+                        <i class="fa-solid fa-file-excel mr-1"></i>
+                        Exporter
                     </button>
                 </h2>
                 <!-- Recherche input en top -->
@@ -21,73 +22,75 @@
             </div>
             <div class="my-1"></div>
             <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-6"></div>
-            <table class="w-full container table-auto text-sm">
-                <thead>
-                    <tr class="text-sm leading-normal bg-green-font text-white">
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Matricule
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Noms
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            status
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Date de Naissance
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            Date de retraite
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            grade
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            corps
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            section
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
-                            UADM
-                        </th>
-                        <th
-                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-                            Details
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="hover:bg-gray-400" v-for="(data, index) in paginatedData" v-bind:key="index">
-                        <td class="py-2 px-4 border-b border-grey-light">{{ data.agent_matricule }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light">{{ data.noms }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light "> {{ data.status }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light "> {{ isDateVide(data, data.date_naissance) }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light ">{{ isDateVide(data, data.date_retrait) }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light "> {{ data.corps }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light "> {{ data.grade }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light "> {{ data.section }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light"> {{ data.ministere }}</td>
-                        <td class="py-2 px-4 border-b border-grey-light text-center"> 
-                            <ModalDetailler />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="overflow-x-scroll">
+                <table class="w-full container table-auto text-sm">
+                    <thead>
+                        <tr class="text-sm leading-normal bg-green-font text-white">
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                Matricule
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                Noms
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                status
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                Date de Naissance
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                Date de retraite
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                grade
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                corps
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                section
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-left">
+                                UADM
+                            </th>
+                            <th
+                                class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
+                                Details
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-400" v-for="(data, index) in paginatedData" v-bind:key="index">
+                            <td class="py-2 px-4 border-b border-grey-light">{{ data.agent_matricule }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light">{{ data.noms }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light "> {{ data.status }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light "> {{ isDateVide(data, data.date_naissance) }}
+                            </td>
+                            <td class="py-2 px-4 border-b border-grey-light ">{{ isDateVide(data, data.date_retrait) }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light "> {{ data.corps }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light "> {{ data.grade }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light "> {{ data.section }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light"> {{ data.ministere }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light text-center">
+                                <ModalDetailler :id="data.id" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="text-left mt-4">
-                <Paginator :rows="itemsPerPage" :totalRecords="dataList.length"
+                <Paginator :rows="itemsPerPage" :totalRecords="length"
                     template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                    currentPageReportTemplate="Affichage {first} de {last} à {totalRecords}"
-                    @page="handlePagination"/>
+                    currentPageReportTemplate="Affichage {first} de {last} à {totalRecords}" @page="handlePagination" />
             </div>
         </div>
     </div>
@@ -95,12 +98,14 @@
 <script>
 import Paginator from 'primevue/paginator';
 import Skeleton from 'primevue/skeleton';
-import ModalDetailler from '@/components/ModalDetailler.vue';
+import ModalDetailler from '@/components/Detailler/ModalDetaillerRetraite.vue';
+import * as XLSX from 'xlsx';
+
 export default {
     name: 'TableRecette',
     components: {
         Skeleton,
-        Paginator,ModalDetailler
+        Paginator, ModalDetailler
     },
     props: {
         dataList: Array,
@@ -109,7 +114,8 @@ export default {
         return {
             itemsPerPage: 10,
             first: 0,
-            query:''
+            length: null,
+            query: ''
         }
     },
     computed: {
@@ -117,30 +123,53 @@ export default {
             if (this.query != '') {
                 // Filtrer en fonction de la recherche
                 const query = this.query.toLowerCase();
-                return this.dataList.filter(item => {
+                var data = this.dataList.filter(item => {
                     return item.agent_matricule.toLowerCase().includes(query)
                         || item.noms.toLowerCase().includes(query)
                         || item.date_retrait.toLowerCase().includes(query)
                 });
+                this.length = data.length
+                const endIndex = this.first + this.itemsPerPage;
+                return data.slice(this.first, endIndex);
             }
             if (!this.dataList) {
                 return [];
             }
+
+            this.length = this.dataList.length
             const endIndex = this.first + this.itemsPerPage
             return this.dataList.slice(this.first, endIndex);
         },
         isDateVide() {
             return function (data, donnee) {
-                return data.date_naissance == null ? '' : donnee
+                return data.date_naissance == null ? '' : new Date(donnee).toLocaleDateString()
             };
         },
 
     },
     methods: {
-        handlePagination(event){      
+        handlePagination(event) {
             this.first = event.first
+        },
+        exportExcel(type, fn, dl) {
+            // var elt = this.$refs.exportable_table;
+            var columnIndexToExclude = 'grades_duree'
+            var dataEx = this.dataList.map(item => {
+                const { [columnIndexToExclude]:excludedColumn, ...rest } = item;
+                return rest;
+            });
+            var ws = XLSX.utils.json_to_sheet(dataEx, { header: ['ID', 'AGENT_MATRICUKLE', 'NOMS', 'STATUS', 'CORPS', 'GRADE', 'DERNIER_AVANCE', 'PROCHAINE_AVANCE', 'UADM', 'SECTION']});
+            // ,{ header: ['AGENT_MATRICUKLE', 'NOMS','STATUS','CORPS','GRADE','DERNIER_AVANCE','PROCHAINE_AVANCE','UADM','SECTION','NOMS','NOMS'] }
+
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Nouveau Titre de la Feuille');
+
+            // var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+            return dl
+                ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' })
+                : XLSX.writeFile(wb, fn || ('ListeAgent Retraite.' + (type || 'xlsx')));
         }
-       
+
     }
 }
 </script>

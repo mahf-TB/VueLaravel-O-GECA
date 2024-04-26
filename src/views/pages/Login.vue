@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center h-screen relative background-radial-gradient">
+  <div class="flex items-center justify-center h-screen relative background-radial-gradient overflow-hidden">
     <div id="radius-shape-4" class="absolute rounded-full shadow-lg"></div>
     <div id="radius-shape-1" class="absolute rounded-full shadow-md"></div>
     <div id="radius-shape-2" class="absolute shadow-5-strong shadow"></div>
@@ -12,13 +12,12 @@
       <form @submit.prevent="login()">
         <div class="flex flex-col text-sm rounded-md">
           <input type="text" class="rounded-[4px] border p-3 hover:outline-none focus:outline-none hover:border-green-400" name="integration[matricule_name]"
-            :class="errorClass" required placeholder="Email or Matricule" v-model="user.nom" />
+            :class="errorClass" required placeholder="Username" v-model="user.nom" />
 
           <p class="text-red-500 text-xs italic mb-5">{{ errorID }}</p>
 
           <input class="border rounded-[4px] p-3 hover:outline-none focus:outline-none hover:border-green-400" name="integration[password]"
             :class="errorClass" :type="[toggle ? 'text' : 'password']" placeholder="Password" v-model="user.motdepasse" />
-
           <p class="text-red-500 text-xs italic mb-5">{{ errorPWD }}</p>
 
           <div class="flex mb-1 justify-between">
@@ -71,7 +70,7 @@ export default {
     async login() {
       if (this.user.nom != "" && this.user.motdepasse != "") {
         var donnee = new FormData();
-        donnee.append("matricule-mail", this.user.nom);
+        donnee.append("username", this.user.nom);
         donnee.append("password", this.user.motdepasse);
       
           Axios.post("/auth/login", donnee)

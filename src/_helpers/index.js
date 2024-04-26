@@ -13,7 +13,7 @@ let Deconnect = (to) => {
 
     if (!token) {
         return true
-    }
+    } 
     router.push('/')
 }
 let User = (to) => {

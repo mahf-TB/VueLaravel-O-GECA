@@ -2,7 +2,7 @@
   <div class="mt-10 mb-10 md:ml-56">
     <!-- main content page -->
     <div class="mt-2 bg-white p-4 shadow rounded-lg">
-      <h2 class="text-gray-500 text-lg font-semibold pb-0">Rechrerche entre deux date</h2>
+      <h2 class="text-gray-500 text-lg font-semibold pb-0">Filtres et rechrerche entre deux date</h2>
       <div class="my-1"></div>
       <div class="bg-gradient-to-r from-green-font to-green-pri h-px mb-1"></div>
       <table class="w-full table-auto text-sm">
@@ -74,6 +74,7 @@ export default {
               icon: 'pi pi-bolt',
               command: () => {
                 this.getAllAvenant6mois()
+               
               }
             },
             {
@@ -90,8 +91,10 @@ export default {
 
     }
   },
+  computed() {
+    this.$root.$on('customEvent', this.getAllAvenant6mois);
+  },
   mounted() {
-
     this.getAllAvenant()
   },
   methods: {
